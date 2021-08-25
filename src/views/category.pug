@@ -1,0 +1,30 @@
+extends _layouts/default
+
+block vars
+  -title        = 'Nodejs - Blog | ' + data.title
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      h3.pb-3.mb-4.font-italic.border-bottom
+        if (data && data.title)
+          | Bài viết thuộc chủ đề: 
+          | &nbsp;
+          span.text-uppercase #{data.title}
+        else
+          | Post
+      .row
+        if (data && data.posts)
+          each post in data.posts
+            .col.col-md-3.mb-4          
+              +card_blog(post)
+        else
+          .col-12
+            +post_empty()
+      

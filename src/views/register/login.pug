@@ -1,0 +1,60 @@
+extends ../_layouts/register
+
+block vars
+  -title        = 'Index page'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  // ./ Sign Up
+  .register-container
+    article.form-register
+      .mb-4
+        h1.card-title.mt-3.text-center Đăng nhập
+      .row
+        .col.col-md-6
+          a.btn.btn-block.btn-twitter.w-100(href='#')
+            i.fab.fa-twitter
+            | &nbsp;
+            span Login via Twitter
+        .col.col-md-6
+          a.btn.btn-block.btn-facebook.w-100(href='#')
+            i.fab.fa-facebook-f
+            | &nbsp;
+            span Login via facebook
+      hr
+      form(method="POST" action="/register/login")
+        unless !data.error
+          .alert.alert-danger.mb-3(role="alert")
+            ul.mb-0!= data.error
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-envelope
+            input.form-control(placeholder='Email' type='email' name='email' value= data.user.email)
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-lock
+            input.form-control(placeholder='Password' type='password' name='password' value= data.user.password)
+        .form-group.mb-3
+          .row.justify-content-between.align-items-center
+            .col.col-auto
+              .form-check
+                input#exampleCheck1.form-check-input(type='checkbox')
+                label.form-check-label(for='exampleCheck1') Ghi nhớ đăng nhập
+            .col.col-auto
+              a(href='#') Quên mật khẩu
+        .form-group.mb-3
+          p.text-center
+            button.btn.btn-primary.w-100(type='submit') Đăng nhập
+        .form-group
+          p.text-center
+            | Chưa có tài khoản? 
+            a(href=path+'/register/signup') Đăng ký
+
+      p.text-center
+        a.btn.btn-link(href=path+'/') Back to Home

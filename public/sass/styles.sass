@@ -1,0 +1,42 @@
+@charset 'utf-8'
+@import './_settings/_settings'
+  
+*
+  > *:last-child
+    margin-bottom: 0
+
+body
+  font:
+    family: $base-font-family
+  padding: 0
+  margin: 0
+
+bold
+  font-weight: 700
+
+.body-container
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+.main-container
+  flex-grow: 1
+
+.ck-content, .ck-editor__editable
+  min-height: 400px
+
+@import '_parts/header'
+@import '_parts/footer'
+@import '_parts/navbar'
+@import '_parts/sidebar'
+
+@import '_forms/register'
+
+@import '_components/heading'
+@import '_components/btn'
+@import '_components/card'
+@import '_components/section'
+@import '_components/post'
+@import '_components/table'
+
+@import '_dashboard/dashboard'

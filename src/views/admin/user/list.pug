@@ -1,0 +1,53 @@
+extends ../../_layouts/dashboard
+
+block vars
+  -title        = 'Admin page | Add user'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '../..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .section-header
+        h2.heading-primary Danh sách người dùng
+      .section-content
+        if !data.users
+          .alert.alert-warning(role="alert")
+            p.text-center.heading-3 
+              | Ops!!! Hiện không có user nào.
+        else
+          table.table
+            thead
+              tr
+                th(scope="col" width="40")
+                  .form-check
+                    input.form-check-input(type='checkbox' id="check_all")
+                th.text-center(scope="col" width="50") #
+                th(scope="col") Họ Tên
+                th(scope="col") Email
+                th.text-end(scope="col") Lần đăng nhập cuối
+                th(scope="col" width="110")
+            tbody
+              each item in data.users
+                tr
+                  td
+                    .form-check
+                      input.form-check-input(type='checkbox' id="user"+item.id)
+                  td.text-center= item.id
+                  td
+                    a.link(href=path+'/admin/user/info/'+item.id)= item.name
+                  td= item.email
+                  td.text-end= item.lastLogin
+                  td
+                    .row.justify-content-end.align-items-center
+                      .col-auto
+                        a.text-success(href="#")
+                          i.fas.fa-eye
+                      .col-auto
+                        a.text-danger(href="#" data-id=item.id data-email=item.email)
+                          i.fas.fa-trash-alt
+

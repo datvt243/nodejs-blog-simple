@@ -1,0 +1,29 @@
+{
+  "name": "nodejs_blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "sass": "node-sass --watch public/sass/styles.sass -o public/css/ --output-style compressed --source-map public/css/styles.map",
+    "nodemon": "nodemon --inspect index.js",
+    "dev": "npm run nodemon"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "multer": "^1.4.3",
+    "mysql": "^2.18.1",
+    "pug": "^3.0.2"
+  },
+  "devDependencies": {
+    "node-sass": "^6.0.1",
+    "nodemon": "^2.0.12",
+    "sass": "^1.37.0"
+  }
+}

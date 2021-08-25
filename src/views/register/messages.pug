@@ -1,0 +1,19 @@
+extends ../_layouts/register
+
+block vars
+  -title        = 'Register messages'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  .register-container
+    article.form-register
+      .text-center
+        unless !data.messages
+          div!= data.messages
+
+      p.text-center
+        a.btn.btn-link(href=path+'/') Back to Home

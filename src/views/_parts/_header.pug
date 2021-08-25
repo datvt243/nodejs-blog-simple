@@ -1,0 +1,66 @@
+header.header-container
+  .header-top
+    .container
+      .row.align-items-center.justify-content-between
+        .col-auto
+          a.navbar-brand(href=path+'/')
+            img(src=path+"/images/code.png" alt="Blog" width="50")
+            span.ms-2 Nodejs - Blog
+        .col-auto
+          ul.list-register
+            if (data && data.user)
+              li.item
+                a#userDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                  | Hi, #{data.user.name}
+                ul.dropdown-menu(aria-labelledby='userDropdown')
+                  li
+                    a.dropdown-item(href=path+'/admin')
+                      i.fas.fa-tachometer-alt
+                      | &nbsp;
+                      | Trang admin
+                  li
+                    hr.dropdown-divider
+                  li
+                    a.dropdown-item(href=path+'/admin/post/add') 
+                      i.fas.fa-plus
+                      | &nbsp;
+                      | Thêm post mới
+                  li
+                    hr.dropdown-divider
+                  li
+                    a.dropdown-item(href=path+'/admin/config')
+                      i.fas.fa-user-cog
+                      | &nbsp;
+                      | Cài đặt
+                  li
+                    a.dropdown-item(href=path+'/user/logout')
+                      i.fas.fa-sign-out-alt
+                      | &nbsp;
+                      | Log out
+            else
+              li.item
+                a.link(href=path+'/register/login') Đăng nhập
+              li.item
+                a.link(href=path+'/register/signup') Đăng ký
+            
+  .header-middle
+    nav.navbar.navbar-expand-lg
+      .container.px-0
+        button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarMain' aria-controls='navbarMain' aria-expanded='false' aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        #navbarMain.collapse.navbar-collapse
+          if (data && data.nav)
+            ul.nav.me-auto.mb-2.mb-lg-0
+              each item in data.nav
+                li.nav-item
+                  a.nav-link.active(aria-current='page' href=path+"/category/"+item.slug)!= item.name
+          else
+            ul.nav.me-auto.mb-2.mb-lg-0
+              li.nav-item
+                a.nav-link.active(aria-current='page' href=path+'/') Home
+          .clearfix
+            form.input-group
+              input.form-control(type='text' placeholder='Search ...')
+              button.input-group-text(type="submit")
+                i.fas.fa-search
+            

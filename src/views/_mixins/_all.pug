@@ -1,0 +1,14 @@
+mixin card_blog(post)
+  .card.card-blog(data-post= post.id)
+    a.card-link(href=path+'/post/'+post.slug)
+      .card-thumb
+        img.card-img(src=path+'/images/javascript.jpg' alt= post.title)
+      .card-body
+        h5.card-title= post.title
+        p.card-text= post.shotDes
+        //- p.card-author
+        //-   span= post.author
+
+mixin post_empty(text = 'Hiện tại chưa có post nào')
+  .post-empty 
+    p= text

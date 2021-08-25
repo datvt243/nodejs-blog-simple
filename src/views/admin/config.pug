@@ -1,0 +1,67 @@
+extends ../_layouts/dashboard
+
+block vars
+  -title        = 'Admin page'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .section-header
+        h2.heading-primary Thông tin người dùng
+      .section-content 
+        .form-wrapper
+          if (data && data.userConfig)
+            - var user = data.userConfig
+            form(id="frmUser")
+              input.form-control(type='hidden' name="id" id="id" value=user.id)
+              .row
+                .col-12.col-md-8
+                  .mb-3
+                    label.form-label Họ tên
+                    input.form-control(type='text' name="name" id="name" placeholder="Nhập họ tên" value=user.name)
+                  .mb-3
+                    label.form-label Email
+                    input.form-control(type='email' name="email" id="email" placeholder="Nhập email" readonly disabled value=user.email)
+                  .mb-3
+                    label.form-label Giới tính
+                    select.form-select(name="sex" id="sex")
+                      - 
+                        var sex = [
+                          [0, 'Nam'],
+                          [1, 'Nữ']
+                        ]
+                      each item in sex
+                        if item[0] == user.sex
+                          option(value=item[0] selected)= item[1]
+                        else
+                          option(value=item[0])= item[1]
+                  .mb-3
+                    label.form-label Ngày sinh
+                    input.form-control(type='date' name="birthday" id="birthday" placeholder="Nhập ngày sinh" value=user.birthday)
+                  .mb-3
+                    .mb-3
+                      label.form-label Avatar
+                      input.form-control(type='file' name="avatar" id="avatar" value="")
+                    img(src=path+'/images/users/base/avatar_male.png' class="img-thumbnail" alt="" width="180")
+                .col-12.col-md-4
+                  .mb-3
+                    label.form-label Ngày tạo
+                    input.form-control(type='text' name="createdAt" id="createdAt" value=user.createdAt readonly disabled)
+                  .mb-3
+                    label.form-label Role
+                    input.form-control(type='text' name="userRole" id="userRole" readonly disabled value= user.userRole ? "Administrator" : "Người dùng")
+                  if (user.editedAt)
+                    .mb-3
+                      label.form-label Lần chỉnh sữa cuối
+                      input.form-control(type='text' name="editedAt" id="editedAt" value=user.editedAt readonly disabled)
+              button.btn.btn-primary.btn-lg(type='button' class="js-user-update") Chỉnh sửa
+          else 
+            .alert.alert-warning(role="alert")
+              p.text-center.heading-3 
+                | Ops!!! Đã xảy ra lỗi hoặc người dùng không tồn tại

@@ -1,0 +1,63 @@
+extends ../_layouts/register
+
+block vars
+  -title        = 'Index page'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  // ./ Sign Up
+  .register-container
+    article.form-register
+      .mb-4
+        h1.card-title.mt-3.text-center Tạo tài khoản mới
+        p.text-center Bắt đầu với tài khoản miễn phí của bạn
+      .row
+        .col.col-md-6
+          a.btn.btn-block.btn-twitter.w-100(href='#')
+            i.fab.fa-twitter
+            | &nbsp;
+            span Login via Twitter
+        .col.col-md-6
+          a.btn.btn-block.btn-facebook.w-100(href='#')
+            i.fab.fa-facebook-f
+            | &nbsp;
+            span Login via facebook
+      hr
+      form(method="POST" action="/register/signup")
+        unless !data.error
+          .alert.alert-danger.mb-3(role="alert")
+            ul.mb-0!= data.error
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-user
+            input.form-control(placeholder='Full name' type='text' name='name' value= data.user.name)
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-envelope
+            input.form-control(placeholder='Email address' type='email' name='email' value= data.user.email)
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-lock
+            input.form-control(placeholder='Create password' type='password' name='password' value= data.user.password)
+        .form-group.mb-3
+          .input-group
+            span.input-group-text
+              i.fa.fa-lock
+            input.form-control(placeholder='Repeat password' type='password' name='re_password')
+        .form-group.mb-3
+          p.text-center
+            button.btn.btn-primary.w-100(type='submit') Tạo mới
+        .form-group
+          p.text-center
+            | Đã có tài khoản? 
+            a(href=path+'/register/login') Đăng nhập
+
+      p.text-center
+        a.btn.btn-link(href=path+'/') Back to Home

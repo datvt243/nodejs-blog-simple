@@ -1,0 +1,47 @@
+extends ../../_layouts/dashboard
+
+block vars
+  -title        = 'Admin page | User info'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '../../..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      if (data.userInfo)
+        .section-header
+          p.mb-0 Thông tin user:
+          h2.heading-primary= data.userInfo.name
+        .section-content
+          table.table
+            tbody
+              tr
+                th(width="200") Họ Tên
+                td= data.userInfo.name
+              tr
+                th Email
+                td= data.userInfo.email
+              tr
+                th Giới tính
+                td
+                  if (!data.userInfo.sex)
+                    | Nam
+                  else
+                    | Nữ
+              tr
+                th Ngày sinh
+                td= data.userInfo.brithday
+      else
+        .section-header
+          p.mb-0 Thông tin user:
+          h2.heading-primary USER ERR
+        .section-content
+          .alert.alert-warning(role='alert') Không có người dùng này
+          
+            
+        
+

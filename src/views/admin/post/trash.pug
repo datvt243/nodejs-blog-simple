@@ -1,0 +1,54 @@
+extends ../../_layouts/dashboard
+
+block vars
+  -title        = 'Admin page | Add post'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '../..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .section-header
+        h2.heading-primary Thùng rác (Post)
+      .section-content
+        if !data.post
+          .alert.alert-warning(role="alert")
+            p.text-center.heading-3 
+              | Ops!!! Không có post nào để hiển thị.
+              | &nbsp;
+              a(href="#") Thêm post mới
+        else
+          table.table
+            thead
+              tr
+                th(scope="col" width="40")
+                th.text-center(scope="col" width="50") #
+                th(scope="col") Tiêu đề
+                th(scope="col") Thể loại
+                th(scope="col") Trạng thái
+                th(scope="col") Publish
+                th(scope="col" width="110")
+            tbody
+              each item in data.post
+                tr
+                  td
+                    .form-check
+                      input.form-check-input(type='checkbox' id="post"+item.id)
+                  td.text-center= item.id
+                  td
+                    a.link(href=path+'/admin/post/edit/'+item.id)= item.title
+                  td= item.category
+                  td
+                    span.badge(class="bg-success")= item.isActive
+                  td 
+                    span.badge(class="bg-success")= item.isPublish
+                  td
+                    .row.justify-content-end.align-items-center
+                      .col-auto
+                        a.text-warning(href='#' class="js-post-untrash" data-trash='0' data-id= item.id) 
+                         | Phục hồi
+

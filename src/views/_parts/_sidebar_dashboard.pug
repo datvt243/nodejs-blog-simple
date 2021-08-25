@@ -1,0 +1,41 @@
+.sidebar.h-100.bg-white.border
+  ul.list-group.list-group-flush.sidebar-nav
+    li.list-group-item
+      a.link(href=path+'/admin')
+        i.fas.fa-tachometer-alt
+        | &nbsp;
+        | Dashboard
+    li.list-group-item
+      .position-relative
+        button.link(type="button" data-bs-toggle="collapse" href="#collapsePosts" role="button" aria-expanded="false" aria-controls="collapsePosts") 
+          i.fas.fa-folder-open
+          | &nbsp;
+          | Bài viết
+        span.icon
+          i.fas.fa-chevron-down
+      .collapse#collapsePosts
+        ul.sub-nav
+          li
+            a.link(href=path+'/admin/post/list') Danh sách
+          li
+            a.link(href=path+'/admin/post/add') Thêm mới
+          li
+            a.link(href=path+'/admin/post/trash') Thùng rác
+    if (data && data.user && data.user.userRole == 1)
+      li.list-group-item
+        .position-relative
+          button.link(type="button" data-bs-toggle="collapse" href="#collapseUsers" role="button" aria-expanded="false" aria-controls="collapseUsers") 
+            i.fas.fa-users
+            | &nbsp;
+            | Users
+          span.icon
+            i.fas.fa-chevron-down
+        .collapse#collapseUsers
+          ul.sub-nav
+            li
+              a.link(href=path+'/admin/user/list') Danh sách
+    li.list-group-item
+      a.link(href=path+'/admin/config') 
+        i.fas.fa-users-cog
+        | &nbsp;
+        | Chỉnh sửa thông tin

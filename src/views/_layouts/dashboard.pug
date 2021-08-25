@@ -1,0 +1,26 @@
+include ../_mixins/_all
+
+block vars
+  -title        = ''
+  -description  = ''
+  -keywords     = ''
+  -path         = ''
+
+doctype html
+html(lang="en")
+  include ../_parts/_head
+  body.bg-light
+    .body-container
+      include ../_parts/_header_dashboard          
+      main.main-container.d-flex.py-4
+        .container
+          .d-flex.h-100
+            .col-sidebar
+              include ../_parts/_sidebar_dashboard
+            .col-content.px-4.flex-grow-1
+              block container
+      include ../_parts/_footer
+    script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.0.2/js/bootstrap.bundle.min.js")
+    block scripts
+    script(src=path+"/scripts/scripts.js")

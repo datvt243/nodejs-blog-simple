@@ -1,0 +1,72 @@
+extends ../../_layouts/dashboard
+
+block vars
+  -title        = 'Admin page | Add post'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '../..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .section-header
+        h2.heading-primary Danh sách bài viết
+      .section-content
+        .mb-4 
+          .row
+            .col
+              a.btn.btn-success(href=path+"/admin/post/add")
+                i.fas.fa-plus
+                | &nbsp;
+                | Thêm post mới
+            .col-auto
+              a.btn.btn-warning(href=path+"/admin/post/trash")
+                i.far.fa-trash-alt
+                | &nbsp;
+                span#count_trash.px-1= data.trash
+                | Trash
+        if !data.post
+          .alert.alert-warning(role="alert")
+            p.text-center.heading-3 
+              | Ops!!! Không có post nào để hiển thị.
+              | &nbsp;
+              a(href="#") Thêm post mới
+        else
+          table.table
+            thead
+              tr
+                th(scope="col" width="40")
+                  .form-check
+                    input.form-check-input(type='checkbox' id="check_all")
+                th.text-center(scope="col" width="50") #
+                th(scope="col") Tiêu đề
+                th(scope="col") Thể loại
+                th(scope="col") Trạng thái
+                th(scope="col") Publish
+                th(scope="col" width="110")
+            tbody
+              each item in data.post
+                tr
+                  td
+                    .form-check
+                      input.form-check-input(type='checkbox' id="post"+item.id)
+                  td.text-center= item.id
+                  td
+                    a.link(href=path+'/admin/post/edit/'+item.id)= item.title
+                  td= item.category
+                  td
+                    span.badge(class="bg-success")= item.isActive
+                  td 
+                    span.badge(class="bg-success")= item.isPublish
+                  td
+                    .row.justify-content-end.align-items-center
+                      .col-auto
+                        a.text-warning(href=path+'/admin/post/edit/'+item.id) 
+                          i.far.fa-edit
+                      .col-auto
+                        a.text-danger(href="#" class="js-post-delete-by-id" data-id=item.id data-title=item.title)
+                          i.fas.fa-trash-alt
+

@@ -1,0 +1,37 @@
+extends _layouts/default
+
+block vars
+  -title        = 'Nodejs - Blog | ' + data.post.title
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'top'
+  -path         = '..'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .post-detail
+        if (data && data.post)
+          .post-header
+            h1.post-heading= data.post.title
+            p.post-meta
+              if (data && data.author)
+                a(href=path+'/user/'+data.author.id)= data.author.name
+              | &nbsp;
+              | đăng ngày
+              | &nbsp;
+              span= data.post.createdAt
+            p.post-tags
+              span.pe-2 tags:
+              if (data && data.tags)
+                each tag in data.tags
+                  a.pe-2(href="#")!= '#'+tag 
+          .post-content!= data.post.content
+          .post-footer
+
+        else
+          .text-center
+            p Lorem ipsum dolor sit amet consectetur adipisicing elit. Adipisci quisquam unde eos! Recusandae sint provident placeat laborum magni quis soluta expedita. Praesentium soluta minus voluptatum hic sit! Eos, natus quas.
+      

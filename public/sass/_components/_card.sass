@@ -1,0 +1,33 @@
+@charset 'utf-8'
+
+.card
+
+  &-link
+    display: block
+    color: currentColor
+    text-decoration: none
+
+.card-blog
+  border: 0
+  background: 
+    color: rgba(0,0,0,.05)
+  height: 100%
+
+  .card
+
+    &-link
+      transition: all .2s ease
+      &:hover
+        color: currentColor
+        opacity: .7
+
+    &-thumb
+      border-radius: 10px
+      margin-bottom: 10px
+      overflow: hidden
+    
+    &-title
+      color: $color_red
+    
+    &-body
+      padding: 0 10px 10px 10px

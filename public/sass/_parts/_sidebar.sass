@@ -1,0 +1,35 @@
+@charset 'utf-8'
+
+.sidebar
+  width: 250px
+  height: 100%
+  padding: 10px
+  border-radius: 4px 0 0 4px
+
+  &-nav
+    
+    .link
+      position: relative
+      display: block
+      width: 100%
+      background: transparent
+      border: 0
+      text-align: left
+      text-decoration: none
+      padding: 10px 0
+      color: currentColor
+    .icon
+      position: absolute
+      right: 0
+      top: 50%
+      transform: translateY(-50%)
+      z-index: 10
+
+    .sub-nav
+      padding: 0 15px
+      list-style-type: none
+      > li
+        &:not(:last-child)
+          border-bottom: 1px solid rgba(0,0,0,.1)
+      .link
+        
