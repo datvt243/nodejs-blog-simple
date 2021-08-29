@@ -1,7 +1,7 @@
 extends _layouts/default
 
 block vars
-  -title        = 'Nodejs - Blog | ' + data.title
+  -title        = data.title  + ' | Nodejs - Blog'
   -description  = ''
   -keywords     = ''
   -pageID       = 'top'
@@ -12,17 +12,17 @@ block container
   // ./ Index
   section.section-wrapper
     .container
-      h3.pb-3.mb-4.font-italic.border-bottom
+      h2.heading-primary
         if (data && data.title)
-          | Bài viết thuộc chủ đề: 
+          | Bài viết thuộc chủ đề:
           | &nbsp;
-          span.text-uppercase #{data.title}
+          strong.text-uppercase #{data.title}
         else
           | Post
       .row
         if (data && data.posts)
           each post in data.posts
-            .col.col-md-3.mb-4          
+            .col.col-md-3.mb-4(data-col=post.id)
               +card_blog(post)
         else
           .col-12

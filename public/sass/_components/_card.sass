@@ -1,5 +1,6 @@
 @charset 'utf-8'
 
+
 .card
 
   &-link
@@ -8,9 +9,11 @@
     text-decoration: none
 
 .card-blog
+  display: flex
+  flex-direction: column
   border: 0
   background: 
-    color: rgba(0,0,0,.05)
+    color: rgba(0,0,0,.01)
   height: 100%
 
   .card
@@ -27,7 +30,19 @@
       overflow: hidden
     
     &-title
-      color: $color_red
+      color: $color_green
     
-    &-body
+    &-body, &-footer
       padding: 0 10px 10px 10px
+      background-color: transparent
+      border: 0
+
+    &-body
+      flex-grow: 1
+      font-size: .9em
+
+    &-footer
+      font-size: .9em
+      
+    &-created-at
+      opacity: .6

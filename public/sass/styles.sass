@@ -1,7 +1,10 @@
 @charset 'utf-8'
-@import './_settings/_settings'
+
+// @use './_settings/colors' as colors
+
+@import './_settings/settings'
   
-*
+*:not(.dropdown-menu > li)
   > *:last-child
     margin-bottom: 0
 
@@ -30,6 +33,7 @@ bold
 @import '_parts/navbar'
 @import '_parts/sidebar'
 
+@import '_forms/common'
 @import '_forms/register'
 
 @import '_components/heading'
@@ -38,5 +42,6 @@ bold
 @import '_components/section'
 @import '_components/post'
 @import '_components/table'
+@import '_components/widget'
 
 @import '_dashboard/dashboard'

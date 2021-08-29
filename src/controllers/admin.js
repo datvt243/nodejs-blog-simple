@@ -9,13 +9,13 @@ const userModel = require('../models/user')
 
 const helpers = require('../helpers')
 
-router.use((req, res, next) => {
-  if (req.session.User) {
-    next()
-  } else {
-    res.redirect('/register/login')
-  }
-})
+// router.use((req, res, next) => {
+//   if (req.session.User) {
+//     next()
+//   } else {
+//     res.redirect('/register/login')
+//   }
+// })
 
 router.use('/post', require(path.join(__dirname, '../../src/controllers/admin.post.js')))
 router.use('/user', require(path.join(__dirname, '../../src/controllers/admin.user.js')))
@@ -35,7 +35,7 @@ router.get('/config', async (req, res) => {
     })
     .catch((err) => console.log(err))
 
-  userConfig.createdAt = helpers.formatDate02(userConfig.createdAt)
+  userConfig.createdAt = helpers.formatShortDate(userConfig.createdAt)
   userConfig.sex = userConfig.sex ? true : false
   res.render('admin/config', {
     data: {
@@ -45,7 +45,7 @@ router.get('/config', async (req, res) => {
   })
 })
 
-router.post('/config', upload.single('avatar'), (req, res) => {
+router.put('/config', upload.single('avatar'), (req, res) => {
   console.log(req.file)
   console.log(req.body)
   res.json({

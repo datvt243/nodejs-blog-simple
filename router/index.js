@@ -12,6 +12,8 @@ router.use('/api', require(path.join(__dirname, '../src/controllers/api')))
 
 router.use('/', require(path.join(__dirname, '../src/controllers/index')))
 
+// router.use('/demo', )
+
 router.get('*', (req, res) => {
   res.render('404')
 })

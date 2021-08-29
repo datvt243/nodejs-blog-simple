@@ -20,7 +20,9 @@
           li
             a.link(href=path+'/admin/post/add') Thêm mới
           li
-            a.link(href=path+'/admin/post/trash') Thùng rác
+            a.link(href=path+'/admin/post/drafts') Thùng rác
+          li
+            a.link(href=path+'/admin/post/category') Thể loại
     if (data && data.user && data.user.userRole == 1)
       li.list-group-item
         .position-relative

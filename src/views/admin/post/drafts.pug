@@ -1,7 +1,7 @@
 extends ../../_layouts/dashboard
 
 block vars
-  -title        = 'Admin page | Add post'
+  -title        = 'Admin page | Drafts'
   -description  = ''
   -keywords     = ''
   -pageID       = 'top'
@@ -15,7 +15,7 @@ block container
       .section-header
         h2.heading-primary Thùng rác (Post)
       .section-content
-        if !data.post
+        if !data.drafts
           .alert.alert-warning(role="alert")
             p.text-center.heading-3 
               | Ops!!! Không có post nào để hiển thị.
@@ -24,31 +24,27 @@ block container
         else
           table.table
             thead
-              tr
+              tr.text-uppercase
                 th(scope="col" width="40")
                 th.text-center(scope="col" width="50") #
                 th(scope="col") Tiêu đề
                 th(scope="col") Thể loại
-                th(scope="col") Trạng thái
-                th(scope="col") Publish
                 th(scope="col" width="110")
             tbody
-              each item in data.post
+              each draft in data.drafts
                 tr
                   td
                     .form-check
-                      input.form-check-input(type='checkbox' id="post"+item.id)
-                  td.text-center= item.id
+                      input.form-check-input(type='checkbox' id="post"+draft.id)
+                  td.text-center= draft.id
                   td
-                    a.link(href=path+'/admin/post/edit/'+item.id)= item.title
-                  td= item.category
-                  td
-                    span.badge(class="bg-success")= item.isActive
-                  td 
-                    span.badge(class="bg-success")= item.isPublish
+                    a.link(href=path+'/admin/post/edit/'+draft.id)= draft.title
+                  td.text-uppercase= draft.category.name
                   td
                     .row.justify-content-end.align-items-center
                       .col-auto
-                        a.text-warning(href='#' class="js-post-untrash" data-trash='0' data-id= item.id) 
-                         | Phục hồi
+                        a.text-warning(href='#' class="js-post-untrash" data-trash='0' data-id= draft.id) 
+                          i.fas.fa-trash-restore
+                          | &nbsp;
+                          | Phục hồi
 

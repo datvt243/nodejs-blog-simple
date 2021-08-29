@@ -7,31 +7,33 @@ header.header-container
             span [Nodejs - Blog] Admin page
           button.navbar-toggler(type='button' data-bs-toggle='collapse' data-bs-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
             span.navbar-toggler-icon
-        .clearfix.d-flex.justify-content-end
-          .dropdown.text-white
-            a#userDropdown.nav-link.dropdown-toggle(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-              if (data && data.user)
-                | Hi, #{data.user.name}
-              else
-                | Hi, Admin
-            ul.dropdown-menu(aria-labelledby='userDropdown')
-              li
-                a.dropdown-item(href=path+'/')
-                  i.fas.fa-tachometer-alt
-                  | &nbsp;
-                  | View Page
-              li
-                hr.dropdown-divider
-              li
-                a.dropdown-item(href=path+'/admin/post/add') 
-                  i.fas.fa-plus
-                  | &nbsp;
-                  | Thêm post mới
-              li
-                hr.dropdown-divider
-              li
-                a.dropdown-item(href=path+'/user/logout')
-                  i.fas.fa-sign-out-alt
-                  | &nbsp;
-                  | Log out
-  
+        .clearfix
+          .row.justify-content-end.align-items-center
+            .col-auto
+              a.link.text-white(href=path+'/')
+                i.fas.fa-home
+                | &nbsp;
+                | Trang chủ
+            .col-auto
+              | |
+            .col-auto
+              .dropdown.text-white
+                a#userDropdown.nav-link.text-white.dropdown-toggle.px-0(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
+                  if (data && data.user)
+                    | Hi, #{data.user.name}
+                  else
+                    | Hi, Admin
+                ul.dropdown-menu(aria-labelledby='userDropdown')
+                  li
+                    a.dropdown-item(href=path+'/admin/post/add') 
+                      i.fas.fa-plus
+                      | &nbsp;
+                      | Thêm post mới
+                  li
+                    hr.dropdown-divider
+                  li
+                    a.dropdown-item(href=path+'/user/logout')
+                      i.fas.fa-sign-out-alt
+                      | &nbsp;
+                      | Log out
+      

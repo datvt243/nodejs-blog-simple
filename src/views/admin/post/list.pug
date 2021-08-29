@@ -23,50 +23,61 @@ block container
                 | &nbsp;
                 | Thêm post mới
             .col-auto
-              a.btn.btn-warning(href=path+"/admin/post/trash")
+              a.btn.btn-warning(href=path+"/admin/post/drafts")
                 i.far.fa-trash-alt
                 | &nbsp;
                 span#count_trash.px-1= data.trash
                 | Trash
-        if !data.post
+        if !data.posts
           .alert.alert-warning(role="alert")
             p.text-center.heading-3 
               | Ops!!! Không có post nào để hiển thị.
               | &nbsp;
               a(href="#") Thêm post mới
         else
-          table.table
-            thead
-              tr
-                th(scope="col" width="40")
-                  .form-check
-                    input.form-check-input(type='checkbox' id="check_all")
-                th.text-center(scope="col" width="50") #
-                th(scope="col") Tiêu đề
-                th(scope="col") Thể loại
-                th(scope="col") Trạng thái
-                th(scope="col") Publish
-                th(scope="col" width="110")
-            tbody
-              each item in data.post
-                tr
-                  td
+          .table-responsive_none
+            table.table.align-middle
+              thead
+                tr.text-uppercase
+                  th(scope="col" width="40")
                     .form-check
-                      input.form-check-input(type='checkbox' id="post"+item.id)
-                  td.text-center= item.id
-                  td
-                    a.link(href=path+'/admin/post/edit/'+item.id)= item.title
-                  td= item.category
-                  td
-                    span.badge(class="bg-success")= item.isActive
-                  td 
-                    span.badge(class="bg-success")= item.isPublish
-                  td
-                    .row.justify-content-end.align-items-center
-                      .col-auto
-                        a.text-warning(href=path+'/admin/post/edit/'+item.id) 
-                          i.far.fa-edit
-                      .col-auto
-                        a.text-danger(href="#" class="js-post-delete-by-id" data-id=item.id data-title=item.title)
-                          i.fas.fa-trash-alt
-
+                      input.form-check-input(type='checkbox' id="check_all")
+                  th.text-center(scope="col" width="50") #
+                  th(scope="col") Tiêu đề
+                  th(scope="col") Người đăng
+                  th(scope="col") Thể loại
+                  //- th.text-center(scope="col") Trạng thái
+                  th.text-end(scope="col") Ngày đăng
+                  th(scope="col" width="110")
+              tbody
+                each post in data.posts
+                  tr
+                    td
+                      .form-check
+                        input.form-check-input(type='checkbox' id="post"+post.id)
+                    td.text-center= post.id
+                    td
+                      a.link(href=path+'/admin/post/edit/'+post.id)= post.title
+                      if (post.isPublish.active)
+                        | &nbsp;
+                        small - last modified
+                    td
+                      a.link(href=path+'/admin/user/info/'+post.author.id)= post.author.name
+                    td
+                      small.text-uppercase= post.category.name
+                    
+                    //- td.text-center
+                    //-   span.badge(class=post.isActive.active ? 'bg-danger' : 'bg-success')= post.isActive.status
+                    td.text-end
+                      small.d-inline-block.lh-1
+                        span= post.createdAt
+                        br
+                        span(class=post.isPublish.active ? 'text-warning' : 'text-success')= post.isPublish.status
+                    td
+                      .row.justify-content-end.align-items-center
+                        .col-auto
+                          a.text-warning(href=path+'/admin/post/edit/'+post.id) 
+                            i.far.fa-edit
+                        .col-auto
+                          a.text-danger(href="#" class="js-post-delete-by-id" data-id=post.id data-title=post.title)
+                            i.fas.fa-trash-alt

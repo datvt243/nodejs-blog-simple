@@ -29,7 +29,7 @@ formatDate = (data = null) => {
   return [year, month, day].join('-');
 }
 
-formatDate02 = (data = null) => {
+formatShortDate = (data = null) => {
   let d = new Date(data)
   let month = '' + (d.getMonth() + 1)
   let day = '' + d.getDate()
@@ -77,7 +77,7 @@ getSessionUser = (req) => {
 
 module.exports = {
   formatDate,
-  formatDate02,
+  formatShortDate,
   hashPassword,
   comparePassword,
   changeToSlug,

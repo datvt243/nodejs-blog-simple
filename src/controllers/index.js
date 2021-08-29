@@ -32,6 +32,12 @@ router.get('/', async (req, res) => {
   })
 })
 
+router.get('/author/:id', (req, res) => {
+  res.render('author', {
+    data: null
+  })
+})
+
 router.get('/post/:slug', async (req, res) => {
 
   const postSlug = req.params.slug
@@ -70,7 +76,7 @@ router.get('/post/:slug', async (req, res) => {
     })
     .catch((err) => console.log(err))
 
-  post.createdAt = helpers.formatDate02(post.createdAt)
+  post.createdAt = helpers.formatShortDate(post.createdAt)
   res.render('post-detail', {
     data: {
       user: helpers.getSessionUser(req),
@@ -106,14 +112,25 @@ router.get('/category/:slug', async (req, res) => {
     })
     .catch((err) => console.log(err))
 
+  posts = await Promise.all(posts.map( async (post) => {
+    await userModel.getUserById(post.author)
+      .then((data) => {
+        post.author = { id: data[0].id, name: data[0].name }
+      })
+      .catch((err) => console.log(err))
+
+    post.createdAt = helpers.formatShortDate(post.createdAt)
+    return post
+  }))
+  
   res.render('category', {
-      data: {
-        user: helpers.getSessionUser(req),
-        title: slug,
-        posts,
-        nav
-      }
-    })
+    data: {
+      user: helpers.getSessionUser(req),
+      title: slug,
+      posts,
+      nav
+    }
+  })
 
 })
 

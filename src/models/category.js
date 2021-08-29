@@ -6,8 +6,8 @@ const dbQuery = (query, values) => {
   return new Promise((resolve, reject) => {
     try {
       db.query(query, values, (err, results) => {
-        if (err) reject(err)
-        resolve(results)
+        if (err) return reject(err)
+        return resolve(results)
       })
     } catch (err) { console.log(err) }
   })
@@ -20,7 +20,8 @@ getAllCategory = () => {
 }
 
 getPostByIdCategory = (id) => {
-  let query = `SELECT * FROM ${tableCategories} WHERE category = ? isActive = 0`
+  let sorter = `id`
+  let query = `SELECT * FROM ${tableCategories} WHERE category = ? isActive = 0 ORDER BY ` + db.escapeId(sorter, true) + ` DESC`;
   let values = [+id]
   return dbQuery(query, values)
 }

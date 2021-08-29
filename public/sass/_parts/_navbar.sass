@@ -1,24 +1,38 @@
 @charset 'utf-8'
 
 .navbar
-  background-color: #e2e8f0
+  background-color: $color_dark
+  color: #fff
   &-nav
     margin: 
       left: -.5rem
       right: -.5rem
 
   &-brand
+    display: inline-block
+    line-height: 0
     color: currentColor
-    span
+    padding: 0
+    .text
       display: inline-block
       line-height: 1
+      font-size: 1em
+      margin-left: .5em
 
 .nav
+  align-items: center
+
   
   &-link
     text-transform: uppercase
     font-weight: 500
-    color: currentColor
-    &.active
+    color: #fff
+    &.active, &:hover
       color: $color_red !important
+
+    &.home
+      font-size: 1.2em
+      padding: 
+        top: 0
+        bottom: 0
       

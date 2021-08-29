@@ -35,7 +35,7 @@ router.get('/list', async (req, res) => {
     })
 
   users = users.map((user) => {
-    user.lastLogin = user.lastLogin ? helpers.formatDate02(user.lastLogin) : user.lastLogin
+    user.lastLogin = user.lastLogin ? helpers.formatShortDate(user.lastLogin) : user.lastLogin
     return user
   })
 

@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const postModel = require('../models/post')
 const categoryModel = require('../models/category')
+const userModel = require('../models/user')
 
 const helpers = require('../helpers')
 
@@ -25,47 +26,67 @@ const post = {
 	metaDes: null,
 }
 
-router.get('/edit/:id', async (req, res) => {
-  const postId = req.params.id
-
+const getCategory = async () => {
   let category
   await categoryModel.getAllCategory()
     .then((data) => {
       category = data
     })
-  
-  postModel.getPostById(+postId)
+  return category
+}
+
+router.get('/edit/:id', async (req, res) => {
+  const postId = req.params.id
+
+  let flagError = false
+  let post
+
+  // Get post
+  await postModel.getPostById(+postId)
     .then((data) => {
-      let post = data[0]
-      post.createdAt = helpers.formatDate(post.createdAt)
-      post.pubishedAt = helpers.formatDate(post.pubishedAt)
-      if (post.updatedAt !== null || post.updatedAt !== '') {
-        post.updatedAt = helpers.formatDate(post.updatedAt)
-      }
-      res.render('admin/post/add', {
-        data: {
-          user: helpers.getSessionUser(req),
-          err: false,
-          method: '',
-          action: '',
-          category: category,
-          post: post,
-          edit: true
-        }
-      })
+      post = data[0]
     }).catch((err) => {
       console.log("ERR: ", err)
-      res.redirect('/404')
     })
+
+  // edit value
+  post = await (async (post) => {
+    await userModel.getUserById(post.author)
+      .then((data) => {
+        post.author = {
+          id: post.author,
+          name: data[0].name 
+        }
+      }).catch((err) => console.log(err))
+    post.createdAt    = helpers.formatShortDate(post.createdAt)
+    post.pubishedAt   = helpers.formatShortDate(post.pubishedAt)
+    if (post.updatedAt !== null || post.updatedAt !== '') {
+      post.updatedAt  = helpers.formatShortDate(post.updatedAt)
+    }
+    return post
+  })(post)
+
+  res.render('admin/post/add', {
+    data: {
+      user: helpers.getSessionUser(req),
+      err: flagError,
+      method: '',
+      action: '',
+      category: await getCategory(),
+      post: post,
+      edit: true
+    }
+  })
+
 });
 
 router.get('/list', async (req, res) => {
-  let post = null
+  let posts = null
   let trash = 0
 
   await postModel.getAllPost()
     .then((data) => {
-      post = data  
+      posts = data  
     }).catch((err) => {
       console.log(err)
     })
@@ -75,51 +96,74 @@ router.get('/list', async (req, res) => {
       trash = data.length
     })
 
+
+  posts = await Promise.all(posts.map(async (post) => {
+    await categoryModel.getNameCategory(post.category)
+      .then((data) => {
+        post.category = { id: post.id, name: data[0].name }
+      }).catch((err) => console.log(err))
+
+    await userModel.getUserById(post.author)
+      .then((data) => {
+        post.author = { id: post.author, name: data[0].name }
+      })
+
+    post.isPublish = { 
+      active: post.isPublish, 
+      status: post.isPublish ? 'Last modified' : 'Published' 
+    }
+    post.createdAt = helpers.formatShortDate(post.createdAt)
+    return post
+  }))
+
   res.render('admin/post/list', {
     data: {
       user: helpers.getSessionUser(req),
-      post,
+      posts,
       trash
     }
   })  
 
 })
 
-router.get('/trash', async (req, res) => {
-  let trash = null
+router.get('/drafts', async (req, res) => {
+  let drafts = null
   await postModel.getAllTrash()
     .then((data) => {
-      trash = data
+      drafts = data
     })
 
-  res.render('admin/post/trash', {
+  drafts = await Promise.all(drafts.map(async (draft) => {
+    await categoryModel.getNameCategory(draft.category)
+      .then((data) => {
+        draft.category = { id: post.id, name: data[0].name }
+      }).catch((err) => console.log(err))
+    return draft
+  }))
+
+  res.render('admin/post/drafts', {
     data: {
       user: helpers.getSessionUser(req),
-      post: trash
+      drafts
     }
   })  
 })
 
 router.get('/add', async (req, res) => {
-  let category
-  await categoryModel.getAllCategory()
-    .then((data) => {
-      category = data
-    })
   res.render('admin/post/add', {
     data: {
       user: helpers.getSessionUser(req),
       err: false,
       method: 'POST',
       action: '/admin/post/add',
-      category: category,
+      category: await getCategory(),
       post: post,
       edit: false
     }
   })
 })
 
-router.post('/add', async (req, res) => {
+router.post('/add', (req, res) => {
   let postInput = req.body
 
   const newPost = {...post}
@@ -130,7 +174,7 @@ router.post('/add', async (req, res) => {
   newPost.thumbnail   = null
 	newPost.shotDes     = postInput.shotDes
 	newPost.content     = postInput.content
-	newPost.slug        = helpers.changeToSlug(postInput.title)
+	newPost.slug        = 's'
 	newPost.isActive    = 0
 	newPost.isPublish   = postInput.isPublish ? 0 : 1
 	newPost.pubishedAt  = postInput.isPublish ? helpers.formatDate() : null
@@ -138,20 +182,20 @@ router.post('/add', async (req, res) => {
 	newPost.tag         = postInput.tag
 	newPost.metaTitle   = postInput.metaTitle
 	newPost.metaDes     = postInput.metaDes
-
-  let category
-  await categoryModel.getAllCategory()
-    .then((data) => {
-      category = data
-    })
-
+  
   postModel.addNewPost(Object.values(newPost))
     .then((data) => {
-      res.redirect('/admin/post')
+      res.redirect('/admin/post/list')
     }).catch((err) => {
       console.log('Error: ', err)
     })
 
+})
+
+router.get('/category', (req, res) => {
+  res.render('admin/post/category', {
+    data: null
+  })
 })
 
 router.get('/', async (req, res) => {

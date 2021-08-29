@@ -6,8 +6,8 @@ const dbQuery = (query, values) => {
   return new Promise((resolve, reject) => {
     try {
       db.query(query, values, (err, results) => {
-        if (err) reject(err)
-        resolve(results)
+        if (err) return reject(err)
+        return resolve(results)
       })
     } catch (err) { console.log(err) }
   })
