@@ -10,47 +10,48 @@ const upload = multer({ dest: 'public/images/posts/' })
 
 const helpers = require('../helpers')
 
-router.get('/count_trash', async (req, res) => {
-  let trash = 0
-  await postModel.getAllTrash()
-    .then((data) => {
-      trash = data.length
-    })
+router.get('/count_drafts', async (req, res) => {
+  let drafts = 0
+  await postModel.getAllDrafts()
+    .then((data) => drafts = data.length)
     .catch((err) => console.log(err))
   res.json({
-    count: trash
+    count: drafts
   })
 })
 
-router.put('/post/edit', (req, res) => {
+router.put('/post/edit', async (req, res) => {
   let post = req.body
+  let success = false
   
   post.updatedAt = helpers.formatDate(post.updatedAt)
   post.slug = helpers.changeToSlug(post.title)
 
-  postModel.updatePost(post)
-    .then((data) => {
-      res.json({success: true})
-    })
+  await postModel.updatePost(post)
+    .then((data) => success = true)
     .catch((err) => console.log(err))
+
+  res.json({success})
 })
 
-router.put('/post/delete', (req, res) => {
+router.put('/post/delete', async (req, res) => {
   let post = req.body
-  postModel.trashPost(post.id)
-    .then((data) => {
-      res.json({success: true})
-    })
+  let success = false
+
+  await postModel.trashPost(post.id)
+    .then((data) => success = true)
     .catch((err) => console.log(err))
+
+  res.json({success})
 })
 
-router.put('/post/un-delete', (req, res) => {
+router.put('/post/un-delete', async (req, res) => {
   let post = req.body
-  postModel.unTrashPost(post.id)
-    .then((data) => {
-      res.json({success: true})
-    })
+  let success = false
+  await postModel.unTrashPost(post.id)
+    .then((data) => success = true)
     .catch((err) => console.log(err))
+  res.json({success})
 })
 
 router.put('/user/edit', upload.single('req.body.avatar'), (req, res) => {

@@ -12,13 +12,10 @@ const TOAST_DELAY = 3000
 
 app.countTrash = async () => {
   let count
-  await fetch(`${URL}api/count_trash`)
-    .then(response => response.json())
-    .then((data) => {
-      console.log({data})
-      count = data.count
-    }).catch((err) => console.log(err))
-  console.log(count)
+  await fetch(`${URL}api/count_drafts`)
+    .then((response) => response.json())
+    .then((data) => count = data.count)
+    .catch((err) => console.log(err))
   return count
 }
 
@@ -46,11 +43,11 @@ app.showToast = (title, content, classname = '') => {
 
   setTimeout(function(){
     document.getElementById('show_toast').remove()
-  }, 3500);
+  }, TOAST_DELAY + 500);
 
 }
 
-app.editPost = () => {
+app.postEdit = () => {
   const btnEdit = $('.js-post-edit')
   if (!!btnEdit) {
     btnEdit.on('click', function(e) {
@@ -67,26 +64,21 @@ app.editPost = () => {
         metaTitle: $('#metaTitle').val(),
         metaDes: $('#metaDes').val(),
       }
-      console.log({postEdited})
-      fetch(`${URL}api/post/edit/`, 
-        {
+
+      fetch(`${URL}api/post/edit/`, {
           method: 'PUT',
           headers: { 'Content-Type':'application/json' },
           body: JSON.stringify(postEdited)
-        }
-      )
+        })
         .then((data) => {
           if(data.status === 200) {
             app.showToast(`Update Success`, `Chỉnh sửa thành công bài viết`, 'success')        
-            setTimeout(function(){
+            setTimeout( function() {
               location.reload();
             }, TOAST_DELAY + 500);       
-          } else {
-            alert("Lỗi Update !!!")
-          }
-        }).catch((err) => {
-          console.log(err)
+          } else alert("Lỗi Update !!!")
         })
+        .catch((err) => console.log(err))
     })
   }
 }
@@ -99,28 +91,22 @@ app.postDelete = () => {
       const postEdited = {
         id: $('#id').val()
       }
-      fetch(`${URL}api/post/delete/`, 
-        {
+      fetch(`${URL}api/post/delete/`, {
           method: 'PUT',
           headers: { 'Content-Type':'application/json' },
           body: JSON.stringify(postEdited)
-        }
-      )
+        })
         .then((data) => {
           if(data.status === 200) {
             app.showToast(`Delete Success`, `Xóa thành công bài viết`, 'danger')        
-            setTimeout(function(){
+            setTimeout( function() {
               LOCATION.href = URL+'admin/post';
             }, TOAST_DELAY + 500);       
-          } else {
-            alert("Lỗi Delete !!!")
-          }
-        }).catch((err) => {
-          console.log(err)
+          } else alert("Lỗi Delete !!!")
         })
+        .catch((err) => console.log(err))
     })
   }
-  
 }
 
 app.postDeleteById = () => {
@@ -131,15 +117,12 @@ app.postDeleteById = () => {
       const _this = $(this)
       const title = _this.attr('data-title')
       if(confirm(`Bạn chắc là muốn xóa post: ${title}`)) {
-        
         const id = _this.attr('data-id')
-        fetch(`${URL}api/post/delete/`, 
-          {
+        fetch(`${URL}api/post/delete/`, {
             method: 'PUT',
             headers: { 'Content-Type':'application/json' },
             body: JSON.stringify({id})
-          }
-        )
+          })
           .then( async (data) => {
             if(data.status === 200) {
 
@@ -149,15 +132,14 @@ app.postDeleteById = () => {
 
               // Update count trash
               let count = await app.countTrash() || 0
-              if(!!$('#count_trash')) {
-                $('#count_trash').html(count)
+              if(!!$('#count_drafts')) {
+                $('#count_drafts').html(count)
               }
 
             } else alert("Lỗi Delete !!!")
           })
           .catch((err) => console.log(err))
       }
-      
     })
   }
 }
@@ -169,19 +151,17 @@ app.postUnTrash = () => {
       e.preventDefault()
       const _this = $(this)
       const postEdited = {
-        id: _this.attr('data-id')
+        id: _this.attr('data-id') || $('#id').val()
       }
-      fetch(`${URL}api/post/un-delete`, 
-        {
+      fetch(`${URL}api/post/un-delete`, {
           method: 'PUT',
           headers: { 'Content-Type':'application/json' },
           body: JSON.stringify(postEdited)
-        }
-      )
+        })
         .then((data) => {
           if(data.status === 200) {
             app.showToast(`Restore Success`, `Phục hồi thành công`, 'info')        
-            _this.closest('tr').remove()   
+            location.reload();   
           } else alert("Lỗi Delete !!!")
         })
         .catch((err) => console.log(err))
@@ -204,23 +184,20 @@ app.userUpdate = () => {
         formData.append(element.name, element.value)
       });
 
-      console.log(formData)
       fetch(`${URL}api/user/edit`, {
         method: 'PUT',
         //headers: { 'Content-Type':'multipart/form-data' },
         //headers: { 'Content-Type':'application/json' },
         body: formData
       })
-        .then((data) => {
-          console.log(data)
-        })
+        .then((data) => console.log(data))
         .catch((err) => console.log(err))
     })
   }
 }
 
 app.init = () => {
-  app.editPost()
+  app.postEdit()
   app.postDelete()
   app.postDeleteById()
   app.postUnTrash()
@@ -228,5 +205,5 @@ app.init = () => {
 }
 
 $(function () {
-  app.init();
-});
+  app.init()
+})

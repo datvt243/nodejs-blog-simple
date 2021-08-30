@@ -26,7 +26,7 @@ getAllPostByCategoryId = (id) => {
   return dbQuery(query, values)
 }
 
-getAllTrash = (val = 1) => {
+getAllDrafts = (val = 1) => {
   let query = `SELECT * FROM ${tablePost} WHERE isActive = ?`
   let values = [val]
   return dbQuery(query, values)
@@ -85,7 +85,7 @@ addNewPost = (post) => {
 
 module.exports = {
   getAllPost,
-  getAllTrash,
+  getAllDrafts,
   getPostById,
   getPostBySlug,
   addNewPost,

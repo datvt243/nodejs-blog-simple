@@ -12,9 +12,7 @@ router.get('/', async (req, res) => {
   let posts, nav
 
   await postModel.getAllPost()
-    .then((data) => {
-      posts = data
-    })
+    .then((data) => posts = data)
     .catch((err) => console.log(err))
   
   await categoryModel.getAllCategory()
@@ -52,15 +50,11 @@ router.get('/post/:slug', async (req, res) => {
         return
       }
     })
-    .catch ((err) => { console.log(err) })
+    .catch ((err) => console.log(err))
 
   await userModel.getUserById(+post.author)
-    .then(data => {
-      if (data.length) {
-        author = data[0]
-      }
-    })
-    .catch ((err) => { console.log(err) })
+    .then(data => author = data[0])
+    .catch ((err) => console.log(err))
 
   let tags = ((tags) => {
     if (tags !== null || tags.length) {

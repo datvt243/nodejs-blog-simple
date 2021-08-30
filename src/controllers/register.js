@@ -8,9 +8,10 @@ router.get('/login', (req, res) => {
     res.redirect('/')
     return
   }
+  let user = { email: 'votan.it@gmail.com', password: 'admin' }
   res.render('register/login' , { 
     data: {
-      user: { email: 'votan.it@gmail.com', password: 'admin' }
+      user
     }
   })
 })
@@ -68,7 +69,8 @@ router.post('/login', (req, res) => {
       .catch((err) => {
         res.render('register/login', {
           data: {
-            error: err, user: { email: '', password: '' }
+            error: err, 
+            user: { email: '', password: '' }
           }
         })
       })

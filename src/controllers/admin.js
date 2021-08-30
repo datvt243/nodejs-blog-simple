@@ -6,7 +6,6 @@ const multer  = require('multer')
 const upload = multer({ dest: 'public/images/posts/' })
 
 const userModel = require('../models/user')
-
 const helpers = require('../helpers')
 
 // router.use((req, res, next) => {
@@ -35,8 +34,12 @@ router.get('/config', async (req, res) => {
     })
     .catch((err) => console.log(err))
 
-  userConfig.createdAt = helpers.formatShortDate(userConfig.createdAt)
-  userConfig.sex = userConfig.sex ? true : false
+  userConfig = ((userConfig) => {
+    userConfig.createdAt  = helpers.formatShortDate(userConfig.createdAt)
+    userConfig.sex        = userConfig.sex ? true : false
+    return userConfig
+  })(userConfig)
+
   res.render('admin/config', {
     data: {
       user: helpers.getSessionUser(req),

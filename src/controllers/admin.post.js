@@ -29,9 +29,8 @@ const post = {
 const getCategory = async () => {
   let category
   await categoryModel.getAllCategory()
-    .then((data) => {
-      category = data
-    })
+    .then((data) => category = data)
+    .catch((err) => console.log(err))
   return category
 }
 
@@ -43,11 +42,8 @@ router.get('/edit/:id', async (req, res) => {
 
   // Get post
   await postModel.getPostById(+postId)
-    .then((data) => {
-      post = data[0]
-    }).catch((err) => {
-      console.log("ERR: ", err)
-    })
+    .then((data) => post = data[0])
+    .catch((err) => console.log(err))
 
   // edit value
   post = await (async (post) => {
@@ -81,32 +77,24 @@ router.get('/edit/:id', async (req, res) => {
 });
 
 router.get('/list', async (req, res) => {
-  let posts = null
-  let trash = 0
+  let posts = null, drafts = 0
 
   await postModel.getAllPost()
-    .then((data) => {
-      posts = data  
-    }).catch((err) => {
-      console.log(err)
-    })
+    .then((data) => posts = data)
+    .catch((err) => console.log(err))
 
-  await postModel.getAllTrash()
-    .then((data) => {
-      trash = data.length
-    })
-
+  await postModel.getAllDrafts()
+    .then((data) => drafts = data.length)
+    .catch((err) => console.log(err))
 
   posts = await Promise.all(posts.map(async (post) => {
     await categoryModel.getNameCategory(post.category)
-      .then((data) => {
-        post.category = { id: post.id, name: data[0].name }
-      }).catch((err) => console.log(err))
+      .then((data) => { post.category = { id: post.id, name: data[0].name } })
+      .catch((err) => console.log(err))
 
     await userModel.getUserById(post.author)
-      .then((data) => {
-        post.author = { id: post.author, name: data[0].name }
-      })
+      .then((data) => { post.author = { id: post.author, name: data[0].name } })
+      .catch((err) => console.log(err))
 
     post.isPublish = { 
       active: post.isPublish, 
@@ -120,7 +108,7 @@ router.get('/list', async (req, res) => {
     data: {
       user: helpers.getSessionUser(req),
       posts,
-      trash
+      drafts
     }
   })  
 
@@ -128,16 +116,14 @@ router.get('/list', async (req, res) => {
 
 router.get('/drafts', async (req, res) => {
   let drafts = null
-  await postModel.getAllTrash()
-    .then((data) => {
-      drafts = data
-    })
+  await postModel.getAllDrafts()
+    .then((data) => drafts = data)
+    .catch((err) => console.log(err))
 
   drafts = await Promise.all(drafts.map(async (draft) => {
     await categoryModel.getNameCategory(draft.category)
-      .then((data) => {
-        draft.category = { id: post.id, name: data[0].name }
-      }).catch((err) => console.log(err))
+      .then((data) => { draft.category = { id: post.id, name: data[0].name } })
+      .catch((err) => console.log(err))
     return draft
   }))
 
@@ -186,21 +172,27 @@ router.post('/add', (req, res) => {
   postModel.addNewPost(Object.values(newPost))
     .then((data) => {
       res.redirect('/admin/post/list')
-    }).catch((err) => {
-      console.log('Error: ', err)
     })
+    .catch((err) => console.log(err))
 
 })
 
-router.get('/category', (req, res) => {
+router.get('/category', async (req, res) => {
+  let categoryList
+
+  await categoryModel.getAllCategory()
+    .then((data) => categoryList = data)
+    .catch((err) => console.log(err))
+
   res.render('admin/post/category', {
-    data: null
+    data: {
+      categoryList
+    }
   })
 })
 
 router.get('/', async (req, res) => {
   res.redirect('/post/list')
 })
-
 
 module.exports = router

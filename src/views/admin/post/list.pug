@@ -26,8 +26,8 @@ block container
               a.btn.btn-warning(href=path+"/admin/post/drafts")
                 i.far.fa-trash-alt
                 | &nbsp;
-                span#count_trash.px-1= data.trash
-                | Trash
+                span#count_drafts.px-1= data.drafts
+                | Drafts
         if !data.posts
           .alert.alert-warning(role="alert")
             p.text-center.heading-3 

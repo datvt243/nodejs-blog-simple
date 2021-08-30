@@ -15,4 +15,37 @@ block container
       .section-header
         h2.heading-primary Danh sách thể loại
       .section-content
-        p Coming soon
+        .clearfix
+          .table-responsive_none
+            table.table.align-middle
+              thead
+                tr.text-uppercase
+                  th(scope="col" width="40")
+                    .form-check
+                      input.form-check-input(type='checkbox' id="check_all")
+                  th.text-center(scope="col" width="50") #
+                  th(scope="col") Tên
+                  th(scope="col") Mô tả
+                  th(scope="col") Slug
+                  //- th.text-center(scope="col") Trạng thái
+                  th.text-end(scope="col") Ngày đăng
+                  th(scope="col" width="110")
+              tbody
+                each item in data.categoryList
+                  tr
+                    td
+                      .form-check
+                        input.form-check-input(type='checkbox' id="post"+item.id)
+                    td.text-center= item.id
+                    td
+                      a.link.text-uppercase(href=path+'/admin/post/category/'+item.id)= item.name
+                    td= item.description
+                    td= item.slug
+                    td
+                      .row.justify-content-end.align-items-center
+                        .col-auto
+                          a.text-warning(href=path+'/admin/post/category/'+item.id) 
+                            i.far.fa-edit
+                        .col-auto
+                          a.text-danger(href="#" class="js-category-delete-by-id" data-id=item.id data-title=item.title)
+                            i.fas.fa-trash-alt
