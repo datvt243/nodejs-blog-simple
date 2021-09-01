@@ -13,34 +13,26 @@ const dbQuery = (query, values) => {
   })
 }
 
-getAllCategory = () => {
+selectAllCategory = () => {
   let query = `SELECT * FROM ${tableCategories} WHERE isActive = ?`
   let values = [0]
   return dbQuery(query, values)
 }
 
-getPostByIdCategory = (id) => {
-  let sorter = `id`
-  let query = `SELECT * FROM ${tableCategories} WHERE category = ? isActive = 0 ORDER BY ` + db.escapeId(sorter, true) + ` DESC`;
-  let values = [+id]
-  return dbQuery(query, values)
-}
-
-getCategoryIdBySlug = (slug) => {
+selectCategoryIdBySlug = (slug) => {
   let query = `SELECT id FROM ${tableCategories} WHERE slug = ? AND isActive = 0`
   let values = [slug]
   return dbQuery(query, values)
 }
 
-getNameCategory = (id) => {
+selectNameCategory = (id) => {
   let query = `SELECT name FROM ${tableCategories} WHERE id = ? AND isActive = 0`
   let values = [+id]
   return dbQuery(query, values)
 }
 
 module.exports = {
-  getAllCategory,
-  getCategoryIdBySlug,
-  getNameCategory,
-  getPostByIdCategory
+  selectAllCategory,
+  selectCategoryIdBySlug,
+  selectNameCategory
 }

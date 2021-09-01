@@ -7,15 +7,23 @@ const categoryModel = require('../models/category')
 
 const helpers = require('../helpers')
 
+const getNavCategory = async () => {
+  let nav
+  await categoryModel.selectAllCategory()
+    .then((data) => nav = data)
+    .catch((err) => console.log(err))
+  return nav
+}
+
 router.get('/', async (req, res) => {
 
   let posts, nav
 
-  await postModel.getAllPost()
+  await postModel.selectAllPostByAuthorId()
     .then((data) => posts = data)
     .catch((err) => console.log(err))
   
-  await categoryModel.getAllCategory()
+  await categoryModel.selectAllCategory()
     .then((data) => {
       if (data.length) nav = data
     })
@@ -41,7 +49,7 @@ router.get('/post/:slug', async (req, res) => {
   const postSlug = req.params.slug
   let post, author, nav
 
-  await postModel.getPostBySlug(postSlug)
+  await postModel.selectPostBySlug(postSlug)
     .then((data) => {
       if (data.length) {
         post = data[0]
@@ -52,7 +60,7 @@ router.get('/post/:slug', async (req, res) => {
     })
     .catch ((err) => console.log(err))
 
-  await userModel.getUserById(+post.author)
+  await userModel.selectUserById(+post.author)
     .then(data => author = data[0])
     .catch ((err) => console.log(err))
 
@@ -64,7 +72,7 @@ router.get('/post/:slug', async (req, res) => {
     }
   })(post.tag)
   
-  await categoryModel.getAllCategory()
+  await categoryModel.selectAllCategory()
     .then((data) => {
       if (data.length) nav = data
     })
@@ -86,28 +94,22 @@ router.get('/post/:slug', async (req, res) => {
 router.get('/category/:slug', async (req, res) => {
   const slug = req.params.slug
 
-  let posts, nav, idCategory
+  let posts, idCategory
 
-  await categoryModel.getCategoryIdBySlug(slug)
+  await categoryModel.selectCategoryIdBySlug(slug)
     .then((data) => {
       idCategory = data[0].id
     })
     .catch((err) => console.log(err))
 
-  await categoryModel.getAllCategory()
-    .then((data) => {
-      if (data.length) nav = data
-    })
-    .catch((err) => console.log(err))
-
-  await postModel.getAllPostByCategoryId(idCategory)
+  await postModel.selectAllPostByCategoryId(idCategory)
     .then((data) => {
       if (data.length) posts = data
     })
     .catch((err) => console.log(err))
 
   posts = await Promise.all(posts.map( async (post) => {
-    await userModel.getUserById(post.author)
+    await userModel.selectUserById(post.author)
       .then((data) => {
         post.author = { id: data[0].id, name: data[0].name }
       })
@@ -122,7 +124,7 @@ router.get('/category/:slug', async (req, res) => {
       user: helpers.getSessionUser(req),
       title: slug,
       posts,
-      nav
+      nav: await getNavCategory()
     }
   })
 

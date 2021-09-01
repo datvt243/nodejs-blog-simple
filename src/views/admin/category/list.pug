@@ -27,8 +27,7 @@ block container
                   th(scope="col") Tên
                   th(scope="col") Mô tả
                   th(scope="col") Slug
-                  //- th.text-center(scope="col") Trạng thái
-                  th.text-end(scope="col") Ngày đăng
+                  th.text-center(scope="col") Active
                   th(scope="col" width="110")
               tbody
                 each item in data.categoryList
@@ -41,6 +40,7 @@ block container
                       a.link.text-uppercase(href=path+'/admin/post/category/'+item.id)= item.name
                     td= item.description
                     td= item.slug
+                    td.text-center= item.isActive
                     td
                       .row.justify-content-end.align-items-center
                         .col-auto

@@ -10,13 +10,13 @@ const upload = multer({ dest: 'public/images/posts/' })
 
 const helpers = require('../helpers')
 
-router.get('/count_drafts', async (req, res) => {
-  let drafts = 0
-  await postModel.getAllDrafts()
-    .then((data) => drafts = data.length)
+router.get('/count_trash', async (req, res) => {
+  let trash = 0
+  await postModel.selectAllTrash()
+    .then((data) => trash = data.length)
     .catch((err) => console.log(err))
   res.json({
-    count: drafts
+    count: trash
   })
 })
 
@@ -38,7 +38,8 @@ router.put('/post/delete', async (req, res) => {
   let post = req.body
   let success = false
 
-  await postModel.trashPost(post.id)
+  post.deletedAt = helpers.formatDate()
+  await postModel.updatePostToTrash(post)
     .then((data) => success = true)
     .catch((err) => console.log(err))
 
@@ -48,7 +49,7 @@ router.put('/post/delete', async (req, res) => {
 router.put('/post/un-delete', async (req, res) => {
   let post = req.body
   let success = false
-  await postModel.unTrashPost(post.id)
+  await postModel.updatePostUnTrash(post.id)
     .then((data) => success = true)
     .catch((err) => console.log(err))
   res.json({success})

@@ -8,23 +8,24 @@ const upload = multer({ dest: 'public/images/posts/' })
 const userModel = require('../models/user')
 const helpers = require('../helpers')
 
-// router.use((req, res, next) => {
-//   if (req.session.User) {
-//     next()
-//   } else {
-//     res.redirect('/register/login')
-//   }
-// })
+router.use((req, res, next) => {
+  if (req.session.User) {
+    next()
+  } else {
+    res.redirect('/register/login')
+  }
+})
 
 router.use('/post', require(path.join(__dirname, '../../src/controllers/admin.post.js')))
 router.use('/user', require(path.join(__dirname, '../../src/controllers/admin.user.js')))
+router.use('/category', require(path.join(__dirname, '../../src/controllers/admin.category.js')))
 
 router.get('/config', async (req, res) => {
   const sessionUser = req.session.User
   let idUser = sessionUser.id
   let userConfig
 
-  await userModel.getUserById(idUser)
+  await userModel.selectUserById(idUser)
     .then((data) => {
       if (data.length) userConfig = data[0]
       else {

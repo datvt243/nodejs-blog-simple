@@ -10,9 +10,9 @@ const URL       = LOCATION.protocol + '//' + LOCATION.host + '/'
 
 const TOAST_DELAY = 3000
 
-app.countTrash = async () => {
+app.selectAllTrash = async () => {
   let count
-  await fetch(`${URL}api/count_drafts`)
+  await fetch(`${URL}api/count_trash`)
     .then((response) => response.json())
     .then((data) => count = data.count)
     .catch((err) => console.log(err))
@@ -100,7 +100,8 @@ app.postDelete = () => {
           if(data.status === 200) {
             app.showToast(`Delete Success`, `Xóa thành công bài viết`, 'danger')        
             setTimeout( function() {
-              LOCATION.href = URL+'admin/post';
+              // LOCATION.href = URL+'admin/post';
+              location.reload();
             }, TOAST_DELAY + 500);       
           } else alert("Lỗi Delete !!!")
         })
@@ -131,9 +132,9 @@ app.postDeleteById = () => {
               _this.closest('tr').remove()
 
               // Update count trash
-              let count = await app.countTrash() || 0
-              if(!!$('#count_drafts')) {
-                $('#count_drafts').html(count)
+              let count = await app.selectAllTrash() || 0
+              if(!!$('#count_trash')) {
+                $('#count_trash').html(count)
               }
 
             } else alert("Lỗi Delete !!!")

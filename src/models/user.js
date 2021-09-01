@@ -13,40 +13,40 @@ const dbQuery = (query, values) => {
   })
 }
 
-addUser = (user) => {
+insertUser = (user) => {
   let query = `INSERT INTO ${tableUser} (name, email, password, createdAt) VALUES ?`
   let values = [[user.name, user.email, user.password, user.createdAt]]
   return dbQuery(query, values)
 }
 
-getAllUsers = () => {
+selectAllUsers = () => {
   let query = `SELECT * FROM ${tableUser}`
   let values = []
   return dbQuery(query, values)
 }
 
-getUser = (user) => {
+selectUserByEmail = (user) => {
   let query = `SELECT * FROM ${tableUser} WHERE email = ?`
   let values = [user.email]
   return dbQuery(query, values)
 }
 
-getUserById = (id) => {
+selectUserById = (id) => {
   let query = `SELECT * FROM ${tableUser} WHERE id = ?`
   let values = [+id]
   return dbQuery(query, values)
 }
 
-getNameUser = (id) => {
+selectNameUser = (id) => {
   let query = `SELECT name FROM ${tableUser} WHERE id = ?`
   let values = [+id]
   return dbQuery(query, values)
 }
 
 module.exports = {
-  addUser,
-  getUser,
-  getAllUsers,
-  getUserById,
-  getNameUser
+  insertUser,
+  selectAllUsers,
+  selectUserByEmail,
+  selectUserById,
+  selectNameUser
 }

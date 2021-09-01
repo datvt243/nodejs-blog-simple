@@ -20,9 +20,20 @@
           li
             a.link(href=path+'/admin/post/add') Thêm mới
           li
-            a.link(href=path+'/admin/post/drafts') Thùng rác
-          li
-            a.link(href=path+'/admin/post/category') Thể loại
+            a.link(href=path+'/admin/post/trash') Thùng rác
+    if (data && data.user && data.user.userRole == 1)
+      li.list-group-item
+        .position-relative
+          button.link(type="button" data-bs-toggle="collapse" href="#collapseCategory" role="button" aria-expanded="false" aria-controls="collapseCategory") 
+            i.fas.fa-list-ul
+            | &nbsp;
+            | Thể loại
+          span.icon
+            i.fas.fa-chevron-down
+        .collapse#collapseCategory
+          ul.sub-nav
+            li
+              a.link(href=path+'/admin/category/list') Danh sách
     if (data && data.user && data.user.userRole == 1)
       li.list-group-item
         .position-relative

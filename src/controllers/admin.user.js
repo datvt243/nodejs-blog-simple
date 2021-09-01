@@ -8,7 +8,7 @@ router.get('/info/:id', async (req, res) => {
   let userId = req.params.id
   let userInfo
 
-  await userModel.getUserById(+userId)
+  await userModel.selectUserById(+userId)
     .then((data) => userInfo = data[0])
     .catch((err) => console.log(err))
 
@@ -24,7 +24,7 @@ router.get('/info/:id', async (req, res) => {
 router.get('/list', async (req, res) => {
   let users = null
 
-  await userModel.getAllUsers()
+  await userModel.selectAllUsers()
     .then((data) => users = data)
     .catch((err) => console.log(err))
 

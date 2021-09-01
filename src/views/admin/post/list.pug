@@ -16,18 +16,45 @@ block container
         h2.heading-primary Danh sách bài viết
       .section-content
         .mb-4 
-          .row
-            .col
+          .row.align-items-center
+            .col-auto
               a.btn.btn-success(href=path+"/admin/post/add")
                 i.fas.fa-plus
                 | &nbsp;
                 | Thêm post mới
+            .col-auto |
             .col-auto
-              a.btn.btn-warning(href=path+"/admin/post/drafts")
-                i.far.fa-trash-alt
-                | &nbsp;
-                span#count_drafts.px-1= data.drafts
-                | Drafts
+              .row.align-items-center
+                .col-auto
+                  span Tổng: <strong>#{data.postsAll}</strong> bài
+                .col-auto.px-0 - 
+                .col-auto
+                  span Active: <strong>#{data.postsActive}</strong> bài
+                .col-auto.px-0 - 
+                .col-auto
+                  span Drafts: <strong>#{data.draft}</strong> bài
+                .col-auto.px-0 - 
+                .col-auto
+                  a.text-warning(href=path+"/admin/post/trash")
+                    i.far.fa-trash-alt
+                    | &nbsp;
+                    span#count_trash.px-1= data.trash
+                    | Trash
+        .mb-3
+          .row
+            .col
+              .input-group(style="width: 250px")
+                select.form-select
+                  option(selected='') -- Action --
+                  option(value='1') Xóa
+                  option(value='2') Publish
+                button.btn.btn-outline-primary Áp dụng
+            .col-auto
+              form.input-group(style="width: 300px")
+                input(type="text" class="form-control" name="title" placeholder="Search post ...")
+                button.btn.btn-outline-secondary(type="submit")
+                  i.fas.fa-search
+              
         if !data.posts
           .alert.alert-warning(role="alert")
             p.text-center.heading-3 
@@ -35,7 +62,7 @@ block container
               | &nbsp;
               a(href="#") Thêm post mới
         else
-          .table-responsive_none
+          .table-responsive
             table.table.align-middle
               thead
                 tr.text-uppercase
@@ -65,19 +92,16 @@ block container
                       a.link(href=path+'/admin/user/info/'+post.author.id)= post.author.name
                     td
                       small.text-uppercase= post.category.name
-                    
-                    //- td.text-center
-                    //-   span.badge(class=post.isActive.active ? 'bg-danger' : 'bg-success')= post.isActive.status
                     td.text-end
-                      small.d-inline-block.lh-1
+                      small.d-inline-block
                         span= post.createdAt
                         br
                         span(class=post.isPublish.active ? 'text-warning' : 'text-success')= post.isPublish.status
                     td
-                      .row.justify-content-end.align-items-center
-                        .col-auto
+                      .d-flex.justify-content-end.align-items-center
+                        .px-2
                           a.text-warning(href=path+'/admin/post/edit/'+post.id) 
                             i.far.fa-edit
-                        .col-auto
+                        .px-2
                           a.text-danger(href="#" class="js-post-delete-by-id" data-id=post.id data-title=post.title)
                             i.fas.fa-trash-alt

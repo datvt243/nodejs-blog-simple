@@ -46,7 +46,7 @@ router.post('/login', (req, res) => {
       }
     })
   } else {
-    userModel.getUser(userLogin)
+    userModel.selectUserByEmail(userLogin)
       .then((data) => {
         if (data.length) {
           let user = data[0]
@@ -128,7 +128,7 @@ router.post('/signup', (req, res) => {
   } else {
     userRegister.password = helpers.hashPassword(user.password)
     userRegister.createdAt = helpers.formatDate()
-    userModel.addUser(userRegister)
+    userModel.insertUser(userRegister)
       .then((result) => {
         res.render('register/messages', {
           data: {
