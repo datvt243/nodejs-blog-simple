@@ -22,3 +22,25 @@ connection.connect((err) => {
 })
 
 module.exports = connection
+
+/*
+The Result Object
+When executing a query, a result object is returned.
+The result object contains information about how the query affected the table.
+The result object returned from the example above looks like this:
+{
+  fieldCount: 0,
+  affectedRows: 14,
+  insertId: 0,
+  serverStatus: 2,
+  warningCount: 0,
+  message: '\'Records:14  Duplicated: 0  Warnings: 0',
+  protocol41: true,
+  changedRows: 0
+}   
+
+INSERT - results.insertId
+DELETE - results.affectedRows
+UPDATE - results.changedRows
+
+*/

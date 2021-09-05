@@ -1,6 +1,7 @@
 const db = require('../../database/database')
 
 const tableCategories = 'categories'
+let categoryModel = {}
 
 const dbQuery = (query, values) => {
   return new Promise((resolve, reject) => {
@@ -13,26 +14,22 @@ const dbQuery = (query, values) => {
   })
 }
 
-selectAllCategory = () => {
+categoryModel.selectAllCategory = () => {
   let query = `SELECT * FROM ${tableCategories} WHERE isActive = ?`
   let values = [0]
   return dbQuery(query, values)
 }
 
-selectCategoryIdBySlug = (slug) => {
+categoryModel.selectCategoryIdBySlug = (slug) => {
   let query = `SELECT id FROM ${tableCategories} WHERE slug = ? AND isActive = 0`
   let values = [slug]
   return dbQuery(query, values)
 }
 
-selectNameCategory = (id) => {
+categoryModel.selectNameCategory = (id) => {
   let query = `SELECT name FROM ${tableCategories} WHERE id = ? AND isActive = 0`
   let values = [+id]
   return dbQuery(query, values)
 }
 
-module.exports = {
-  selectAllCategory,
-  selectCategoryIdBySlug,
-  selectNameCategory
-}
+module.exports = categoryModel

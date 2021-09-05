@@ -50,8 +50,8 @@ router.get('/config', async (req, res) => {
 })
 
 router.put('/config', upload.single('avatar'), (req, res) => {
-  console.log(req.file)
-  console.log(req.body)
+  // console.log(req.file)
+  // console.log(req.body)
   res.json({
     file: req.file,
     body: req.body,

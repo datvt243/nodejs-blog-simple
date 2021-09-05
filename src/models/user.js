@@ -1,6 +1,7 @@
 const db = require('../../database/database')
 
 const tableUser = 'users'
+let userModel = {}
 
 const dbQuery = (query, values) => {
   return new Promise((resolve, reject) => {
@@ -13,40 +14,34 @@ const dbQuery = (query, values) => {
   })
 }
 
-insertUser = (user) => {
-  let query = `INSERT INTO ${tableUser} (name, email, password, createdAt) VALUES ?`
+userModel.insertUser = (user) => {
+  let query = `INSERT INTO ${tableUser} (name, email, password, createdAt) VALUES (?)`
   let values = [[user.name, user.email, user.password, user.createdAt]]
   return dbQuery(query, values)
 }
 
-selectAllUsers = () => {
+userModel.selectAllUsers = () => {
   let query = `SELECT * FROM ${tableUser}`
   let values = []
   return dbQuery(query, values)
 }
 
-selectUserByEmail = (user) => {
+userModel.selectUserByEmail = (user) => {
   let query = `SELECT * FROM ${tableUser} WHERE email = ?`
   let values = [user.email]
   return dbQuery(query, values)
 }
 
-selectUserById = (id) => {
+userModel.selectUserById = (id) => {
   let query = `SELECT * FROM ${tableUser} WHERE id = ?`
   let values = [+id]
   return dbQuery(query, values)
 }
 
-selectNameUser = (id) => {
+userModel.selectNameUser = (id) => {
   let query = `SELECT name FROM ${tableUser} WHERE id = ?`
   let values = [+id]
   return dbQuery(query, values)
 }
 
-module.exports = {
-  insertUser,
-  selectAllUsers,
-  selectUserByEmail,
-  selectUserById,
-  selectNameUser
-}
+module.exports = userModel

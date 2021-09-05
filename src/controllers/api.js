@@ -10,14 +10,37 @@ const upload = multer({ dest: 'public/images/posts/' })
 
 const helpers = require('../helpers')
 
-router.get('/count_trash', async (req, res) => {
+router.get('/count_post_all', async (req, res) => {
   let trash = 0
-  await postModel.selectAllTrash()
+  let author = req.session.User.userRole ? '' : req.session.User.id
+  await postModel.selectAllPost(author)
     .then((data) => trash = data.length)
     .catch((err) => console.log(err))
-  res.json({
-    count: trash
-  })
+  res.json({count: trash})
+})
+router.get('/count_post_active', async (req, res) => {
+  let trash = 0
+  let author = req.session.User.userRole ? '' : req.session.User.id
+  await postModel.selectAllActive(author)
+    .then((data) => trash = data.length)
+    .catch((err) => console.log(err))
+  res.json({count: trash})
+})
+router.get('/count_post_trash', async (req, res) => {
+  let trash = 0
+  let author = req.session.User.userRole ? '' : req.session.User.id
+  await postModel.selectAllTrash(author)
+    .then((data) => trash = data.length)
+    .catch((err) => console.log(err))
+  res.json({count: trash})
+})
+router.get('/count_post_draft', async (req, res) => {
+  let trash = 0
+  let author = req.session.User.userRole ? '' : req.session.User.id
+  await postModel.selectAllDraft(author)
+    .then((data) => trash = data.length)
+    .catch((err) => console.log(err))
+  res.json({count: trash})
 })
 
 router.put('/post/edit', async (req, res) => {

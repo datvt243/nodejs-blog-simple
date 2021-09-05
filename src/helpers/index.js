@@ -1,17 +1,19 @@
 const bcrypt = require('bcrypt')
 
-hashPassword = (pwd) => {
+let helpersModel = {}
+
+helpersModel.hashPassword = (pwd) => {
   const saltRounds = 10
   let salt = bcrypt.genSaltSync(saltRounds)
   let hash = bcrypt.hashSync(pwd, salt)
   return hash
 }
 
-comparePassword = (pwd, hash) => {
+helpersModel.comparePassword = (pwd, hash) => {
   return bcrypt.compareSync(pwd, hash)
 }
 
-formatDate = (data = null) => {
+helpersModel.formatDate = (data = null) => {
   let d 
   if (data) {
     d = new Date(data)
@@ -29,7 +31,7 @@ formatDate = (data = null) => {
   return [year, month, day].join('-');
 }
 
-formatShortDate = (data = null) => {
+helpersModel.formatShortDate = (data = null) => {
   let d = new Date(data)
   let month = '' + (d.getMonth() + 1)
   let day = '' + d.getDate()
@@ -42,7 +44,7 @@ formatShortDate = (data = null) => {
   return [day, month, year].join('/');
 }
 
-changeToSlug = (title) => {
+helpersModel.changeToSlug = (title) => {
   let slug
   //Đổi chữ hoa thành chữ thường
   slug = title.toLowerCase();
@@ -71,15 +73,12 @@ changeToSlug = (title) => {
   return slug
 }
 
-getSessionUser = (req) => {
+helpersModel.getSessionUser = (req) => {
   return req.session.User ? req.session.User : null
 }
 
-module.exports = {
-  formatDate,
-  formatShortDate,
-  hashPassword,
-  comparePassword,
-  changeToSlug,
-  getSessionUser
+helpersModel.getSessionUserId = (req) => {
+  return req.session.User.userRole ? null : req.session.User.id
 }
+
+module.exports = helpersModel

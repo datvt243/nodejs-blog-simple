@@ -13,7 +13,7 @@ block container
   section.section-wrapper
     .container
       .section-header
-        h2.heading-primary Thùng rác (Post)
+        h2.heading-primary Bản nháp (Post)
       .section-content
         
         .mb-3
@@ -25,13 +25,12 @@ block container
                   option(value='1') Xóa
                   option(value='2') Publish
                 button.btn.btn-outline-primary Áp dụng
-            //- .col-auto
-            //-   form.input-group(style="width: 300px")
-            //-     input(type="text" class="form-control" name="title" placeholder="Search post ...")
-            //-     button.btn.btn-outline-secondary(type="submit")
-            //-       i.fas.fa-search
+            .col-auto
+              form.input-group(style="width: 300px")
+                input(type="text" class="form-control" name="title" placeholder="Search post ..." value=data.search)
+                button.btn.btn-outline-secondary(type="submit")
+                  i.fas.fa-search
         .mb-3
-          
           .table-responsive
             table.table
               thead
@@ -42,7 +41,7 @@ block container
                   th.text-center(scope="col" width="50") #
                   th(scope="col") Tiêu đề
                   th(scope="col") Thể loại
-                  th(scope="col") Ngày xóa
+                  th(scope="col") Người đăng
                   th(scope="col")
               tbody
                 if (data.trash.length === 0)
@@ -63,17 +62,14 @@ block container
                       td
                         a.link(href=path+'/admin/post/edit/'+draft.id)= draft.title
                       td.text-uppercase= draft.category.name
-                      td= draft.deletedAt
+                      td
+                        a.link(href=path+'/admin/user/info/'+draft.author.id)= draft.author.name
                       td
                         .d-flex.justify-content-end.align-items-center
                           .px-2
-                            a.trans.text-info(href='#' class="js-post-untrash" data-id= draft.id) 
-                              i.fas.fa-trash-restore
-                              | &nbsp;
-                              | Phục hồi
+                            a.text-warning(href=path+'/admin/post/edit/'+draft.id) 
+                              i.far.fa-edit
                           .px-2
-                            a.trans.text-danger(href='#' class="js-post-delete" data-id= draft.id) 
-                              i.fas.fa-window-close
-                              | &nbsp;
-                              | Xóa vĩnh viễn
+                            a.text-danger(href="#" class="js-post-delete-by-id" data-id=draft.id data-title=draft.title)
+                              i.fas.fa-trash-alt
 

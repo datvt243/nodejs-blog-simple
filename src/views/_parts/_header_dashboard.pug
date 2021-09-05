@@ -19,10 +19,13 @@ header.header-container
             .col-auto
               .dropdown.text-white
                 a#userDropdown.nav-link.text-white.dropdown-toggle.px-0(href='#' role='button' data-bs-toggle='dropdown' aria-expanded='false')
-                  if (data && data.user)
-                    | Hi, #{data.user.name}
-                  else
-                    | Hi, Admin
+                  span.d-inline-block.lh-1
+                    if (data && data.user)
+                      | Hi, #{data.user.name}
+                      br
+                      small #{data.user.userRole ? 'Administrator' : 'Người dùng'}
+                    else
+                      | Hi, Admin
                 ul.dropdown-menu(aria-labelledby='userDropdown')
                   li
                     a.dropdown-item(href=path+'/admin/post/add') 

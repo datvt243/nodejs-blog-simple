@@ -56,11 +56,11 @@ header.header-container
             if (data && data.nav)
               each item in data.nav
                 li.nav-item
-                  a.nav-link(class={active : data.title === item.slug} aria-current='page' href=path+"/category/"+item.slug)!= item.name
+                  a.nav-link.text-uppercase(class={active : data.title === item.slug} aria-current='page' href=path+"/category/"+item.slug)!= item.name
           
           .clearfix
-            form.input-group.frm-search
-              input.form-control(type='text' placeholder='Search ...')
+            form.input-group.frm-search(method="GET" action="/search")
+              input.form-control(type='text' placeholder='Search ...' name="title")
               button.input-group-text(type="submit")
                 i.fas.fa-search
             

@@ -5,6 +5,7 @@ const categoryModel = require('../models/category')
 const userModel = require('../models/user')
 
 const helpers = require('../helpers')
+const { rawListeners } = require('../../database/database')
 
 const post = {
   id: null,
@@ -79,35 +80,36 @@ router.get('/edit/:id', async (req, res) => {
 router.get('/list', async (req, res) => {
   let posts = null
   let postsAll = 0, trash = 0, draft = 0
-
-  let author = (req => {
-    let user = req.session.User
-    return user.userRole ? '' : user.id
-  })(req)
+  let author = req.session.User.userRole ? '' : req.session.User.id
   
-  await postModel.selectAllPostByAuthorId(author)
-    .then(data => posts = data)
+  let query = req.query.title || null
+
+  await Promise.all([
+      postModel.selectAllActive(author, query),
+      postModel.selectAllPost(author), 
+      postModel.selectAllTrash(author), 
+      postModel.selectAllDraft(author)
+    ])
+    .then(result => {
+      posts       = result[0]
+      postsAll    = result[1].length
+      trash       = result[2].length
+      draft       = result[3].length
+    })
     .catch(err => console.log(err))
 
-  let promiseAllPost  = postModel.selectAllPost()
-  let promiseTrash    = postModel.selectAllTrash()
-  let promiseDraft    = postModel.selectAllDraft()
-  Promise.all([promiseAllPost, promiseTrash, promiseDraft])
-    .then(result => {
-      postsAll    = result[0].length
-      trash       = result[1].length
-      draft       = result[2].length
-    })
-
   posts = await Promise.all(posts.map(async (post) => {
-    await categoryModel.selectNameCategory(post.category)
-      .then(data => { post.category = { id: post.id, name: data[0].name } })
+    await Promise
+      .all([
+        categoryModel.selectNameCategory(post.category),
+        userModel.selectUserById(post.author)
+      ])
+      .then(results => {
+        post.category   = { id: post.id, name: results[0][0].name }
+        post.author     = { id: post.author, name: results[1][0].name }
+      })
       .catch(err => console.log(err))
-
-    await userModel.selectUserById(post.author)
-      .then(data => { post.author = { id: post.author, name: data[0].name } })
-      .catch(err => console.log(err))
-
+    
     post.isPublish = { 
       active: post.isPublish, 
       status: post.isPublish ? 'Last modified' : 'Published' 
@@ -123,24 +125,62 @@ router.get('/list', async (req, res) => {
       postsAll,
       postsActive: posts.length,
       trash,
-      draft
+      draft,
+      search: query ? query : ''
     }
   })  
 
 })
 
-router.get('/trash', async (req, res) => {
+router.get('/draft', async (req, res) => {
   let trash = null
-  await postModel.selectAllTrash()
+  let author = req.session.User.userRole ? '' : req.session.User.id
+
+  let query = req.query.title || null
+
+  await postModel.selectAllDraft(author, query)
     .then(data => trash = data)
     .catch(err => console.log(err))
 
-  trash = await Promise.all(trash.map(async (draft) => {
-    await categoryModel.selectNameCategory(draft.category)
-      .then(data => { draft.category = { id: post.id, name: data[0].name } })
+  trash = await Promise.all(trash.map(async (elm) => {
+    await Promise
+      .all([
+        categoryModel.selectNameCategory(elm.category),
+        userModel.selectUserById(elm.author)
+      ])
+      .then(results => {
+        elm.category   = { id: elm.id, name: results[0][0].name }
+        elm.author     = { id: elm.author, name: results[1][0].name }
+      })
       .catch(err => console.log(err))
-    draft.deletedAt = helpers.formatShortDate(draft.deletedAt)
-    return draft
+    
+    elm.deletedAt = helpers.formatShortDate(elm.deletedAt)
+    return elm
+  }))
+
+  res.render('admin/post/draft', {
+    data: {
+      user: helpers.getSessionUser(req),
+      trash,
+      search: query ? query : ''
+    }
+  })  
+})
+
+router.get('/trash', async (req, res) => {
+  let trash = null
+  let author = req.session.User.userRole ? '' : req.session.User.id
+
+  await postModel.selectAllTrash(author)
+    .then(data => trash = data)
+    .catch(err => console.log(err))
+
+  trash = await Promise.all(trash.map(async (elm) => {
+    await categoryModel.selectNameCategory(elm.category)
+      .then(data => { elm.category = { id: post.id, name: data[0].name } })
+      .catch(err => console.log(err))
+      elm.deletedAt = helpers.formatShortDate(elm.deletedAt)
+    return elm
   }))
 
   res.render('admin/post/trash', {

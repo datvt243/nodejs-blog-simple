@@ -34,7 +34,6 @@ app.set('views', path.join(__dirname, 'src/views'))
 // set route
 app.use(router)
 
-const port = 3000
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   console.log(`App listening at http://localhost:${process.env.PORT}`)
 })

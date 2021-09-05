@@ -1,0 +1,49 @@
+extends _layouts/default
+
+block vars
+  -title        = 'About page'
+  -description  = ''
+  -keywords     = ''
+  -pageID       = 'about'
+  -path         = '.'
+
+block container
+
+  // ./ Index
+  section.section-wrapper
+    .container
+      .section-header
+        h2.heading-primary Trang tìm kím
+      .section-content
+        .clearfix.mb-4
+          p.h4 Nhập từ khóa tìm kiếm
+          form.input-group(method="GET" action="/search")
+            .input-group.input-group-md
+              span.input-group-text
+                i.fas.fa-search
+              input.form-control(type='text' name="title" placeholder='Nhập từ khóa ...')
+        if (data.results)
+          .clearfix
+            hr
+            p.text-large
+              | Danh sách tìm kiếm với từ khóa: 
+              strong.h3= data.query
+            if (data.results.length)
+              ul.list-group.list-group-flush
+              each post in data.results
+                li.list-group-item.p-0.border-0.mb-2
+                  .card.card-blog.p-2.border(data-post= post.id)
+                    .card-body
+                      h5.card-title
+                        a.card-link(href=path+'/post/'+post.slug)= post.title
+                      p.card-text.dots= post.shotDes
+                    if (post.author && post.author.id && post.author.name)
+                      .card-footer
+                        small.text-right
+                          a.link(href=path+'/author/'+post.author.id) #{post.author.name}
+                          | &nbsp;
+                          | viết ngày
+                          | &nbsp;
+                          span.card-created-at= post.createdAt
+            else
+              +post_empty(`Không có bài viết nào với từ khóa <i>#${data.query}</i>`)

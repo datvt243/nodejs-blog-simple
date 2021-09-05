@@ -1,3 +1,12 @@
+mixin DanhSach()
+  i.fas.fa-ellipsis-h
+  | &nbsp;
+  | Danh sách
+mixin ThemMoi()
+  i.far.fa-plus-square
+  | &nbsp;
+  | Thêm mới
+
 .sidebar.h-100.bg-white.border
   ul.list-group.list-group-flush.sidebar-nav
     li.list-group-item
@@ -16,16 +25,26 @@
       .collapse#collapsePosts
         ul.sub-nav
           li
-            a.link(href=path+'/admin/post/list') Danh sách
+            a.link(href=path+'/admin/post/list')
+              +DanhSach()
           li
-            a.link(href=path+'/admin/post/add') Thêm mới
+            a.link(href=path+'/admin/post/add')
+              +ThemMoi()
           li
-            a.link(href=path+'/admin/post/trash') Thùng rác
+            a.link(href=path+'/admin/post/draft') 
+              i.far.fa-edit
+              | &nbsp;
+              | Bản nháp
+          li
+            a.link(href=path+'/admin/post/trash') 
+              i.far.fa-trash-alt
+              | &nbsp;
+              | Thùng rác
     if (data && data.user && data.user.userRole == 1)
       li.list-group-item
         .position-relative
           button.link(type="button" data-bs-toggle="collapse" href="#collapseCategory" role="button" aria-expanded="false" aria-controls="collapseCategory") 
-            i.fas.fa-list-ul
+            i.fas.fa-layer-group
             | &nbsp;
             | Thể loại
           span.icon
@@ -33,7 +52,8 @@
         .collapse#collapseCategory
           ul.sub-nav
             li
-              a.link(href=path+'/admin/category/list') Danh sách
+              a.link(href=path+'/admin/category/list')
+                +DanhSach()
     if (data && data.user && data.user.userRole == 1)
       li.list-group-item
         .position-relative
@@ -46,7 +66,8 @@
         .collapse#collapseUsers
           ul.sub-nav
             li
-              a.link(href=path+'/admin/user/list') Danh sách
+              a.link(href=path+'/admin/user/list')
+                +DanhSach()
     li.list-group-item
       a.link(href=path+'/admin/config') 
         i.fas.fa-users-cog

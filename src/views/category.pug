@@ -20,7 +20,7 @@ block container
         else
           | Post
       .row
-        if (data && data.posts)
+        if (data && data.posts.length)
           each post in data.posts
             .col.col-md-3.mb-4(data-col=post.id)
               +card_blog(post)

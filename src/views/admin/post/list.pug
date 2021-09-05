@@ -26,19 +26,23 @@ block container
             .col-auto
               .row.align-items-center
                 .col-auto
-                  span Tổng: <strong>#{data.postsAll}</strong> bài
+                  span Tổng: <strong id="post_all">#{data.postsAll}</strong> bài
                 .col-auto.px-0 - 
                 .col-auto
-                  span Active: <strong>#{data.postsActive}</strong> bài
+                  span Active: <strong id="post_active">#{data.postsActive}</strong> bài
                 .col-auto.px-0 - 
                 .col-auto
-                  span Drafts: <strong>#{data.draft}</strong> bài
+                  a.text-warning(href=path+"/admin/post/draft")
+                    i.far.fa-edit
+                    | &nbsp;
+                    span#post_trash.px-1= data.draft
+                    | Drafts
                 .col-auto.px-0 - 
                 .col-auto
-                  a.text-warning(href=path+"/admin/post/trash")
+                  a.text-danger(href=path+"/admin/post/trash")
                     i.far.fa-trash-alt
                     | &nbsp;
-                    span#count_trash.px-1= data.trash
+                    span#post_trash.px-1= data.trash
                     | Trash
         .mb-3
           .row
@@ -50,18 +54,16 @@ block container
                   option(value='2') Publish
                 button.btn.btn-outline-primary Áp dụng
             .col-auto
-              form.input-group(style="width: 300px")
-                input(type="text" class="form-control" name="title" placeholder="Search post ...")
-                button.btn.btn-outline-secondary(type="submit")
-                  i.fas.fa-search
+              form(method="GET" action="/admin/post/list")
+                .input-group(style="width: 300px")
+                  input(type="text" class="form-control" name="title" placeholder="Search post ..." value=data.search)
+                  button.btn.btn-outline-secondary(type="submit")
+                    i.fas.fa-search
               
-        if !data.posts
-          .alert.alert-warning(role="alert")
-            p.text-center.heading-3 
-              | Ops!!! Không có post nào để hiển thị.
-              | &nbsp;
-              a(href="#") Thêm post mới
-        else
+        .mb-3
+          if (!!data.search)
+            .alert.alert-warning.p-2
+              p Bạn đang tìm kiếm với từ khóa: <i>#{data.search}</i>
           .table-responsive
             table.table.align-middle
               thead
@@ -77,31 +79,40 @@ block container
                   th.text-end(scope="col") Ngày đăng
                   th(scope="col" width="110")
               tbody
-                each post in data.posts
+                if !data.posts.length
                   tr
-                    td
-                      .form-check
-                        input.form-check-input(type='checkbox' id="post"+post.id)
-                    td.text-center= post.id
-                    td
-                      a.link(href=path+'/admin/post/edit/'+post.id)= post.title
-                      if (post.isPublish.active)
-                        | &nbsp;
-                        small - last modified
-                    td
-                      a.link(href=path+'/admin/user/info/'+post.author.id)= post.author.name
-                    td
-                      small.text-uppercase= post.category.name
-                    td.text-end
-                      small.d-inline-block
-                        span= post.createdAt
-                        br
-                        span(class=post.isPublish.active ? 'text-warning' : 'text-success')= post.isPublish.status
-                    td
-                      .d-flex.justify-content-end.align-items-center
-                        .px-2
-                          a.text-warning(href=path+'/admin/post/edit/'+post.id) 
-                            i.far.fa-edit
-                        .px-2
-                          a.text-danger(href="#" class="js-post-delete-by-id" data-id=post.id data-title=post.title)
-                            i.fas.fa-trash-alt
+                    td.border-0(colspan="7")
+                      .post-empty
+                        p.text-center.heading-3 
+                          | Ops!!! Không có post nào để hiển thị.
+                          | &nbsp;
+                          a(href="#") Thêm post mới
+                else
+                  each post in data.posts
+                    tr
+                      td
+                        .form-check
+                          input.form-check-input(type='checkbox' id="post"+post.id)
+                      td.text-center= post.id
+                      td
+                        a.link(href=path+'/admin/post/edit/'+post.id)= post.title
+                        if (post.isPublish.active)
+                          | &nbsp;
+                          small - last modified
+                      td
+                        a.link(href=path+'/admin/user/info/'+post.author.id)= post.author.name
+                      td
+                        small.text-uppercase= post.category.name
+                      td.text-end
+                        small.d-inline-block
+                          span= post.createdAt
+                          br
+                          span(class=post.isPublish.active ? 'text-warning' : 'text-success')= post.isPublish.status
+                      td
+                        .d-flex.justify-content-end.align-items-center
+                          .px-2
+                            a.text-warning(href=path+'/admin/post/edit/'+post.id) 
+                              i.far.fa-edit
+                          .px-2
+                            a.text-danger(href="#" class="js-post-delete-by-id" data-id=post.id data-title=post.title)
+                              i.fas.fa-trash-alt
