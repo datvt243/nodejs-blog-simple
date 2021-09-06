@@ -14,21 +14,31 @@ block container
     .container
       .post-detail
         if (data && data.post)
+          - var post = data.post
           .post-header
-            h2.post-heading= data.post.title
+            h2.post-heading= post.title
             p.post-meta
               if (data && data.author)
                 a(href=path+'/user/'+data.author.id)= data.author.name
               | &nbsp;
               | đăng ngày
               | &nbsp;
-              span= data.post.createdAt
-            p.post-tags
-              span.pe-2 tags:
-              if (data.post && data.post.tag)
-                each tag in data.post.tag
-                  a.pe-2(href="#")!= '#'+tag 
-          .post-content!= data.post.content
+              span= post.createdAt
+            if (post.tag.length && post.tag != '')
+              p.post-tags
+                span.pe-2 tags:
+                each tag in post.tag
+                  a.pe-2(href=path+'/tag/?tag='+tag)!= '#'+tag
+          
+          .row
+            .col-12.col-md-9
+              if (post.thumbnail)
+                .post-thumbnail.text-center.mb-4
+                  img.img-thumbnail(src=path+'/images/posts/'+post.thumbnail alt=post.title)
+              .post-content!= post.content
+            .col-12.col-md-3
+              .post-sidebar
+                p Lorem ipsum dolor sit, amet consectetur adipisicing elit. Facere temporibus quod beatae consequuntur illo repudiandae?
           .post-footer
         else
           .text-center

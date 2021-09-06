@@ -23,7 +23,7 @@ block container
       .section-content
         .messages
         //- enctype="multipart/form-data"
-        form.form#frmPost(method= data.method action= data.action )
+        form.form#frmPost(method= data.method action= data.action enctype= data.enctype )
           - var post = data.post
           .row
             .col.col-md-9
@@ -121,7 +121,6 @@ block container
                 .widget-content
                   input.form-control(type='text' placeholder='Tags ...' name="tag" id="tag" value= post.tag)
              
-              
           hr
           .row
             .col-auto
@@ -131,9 +130,10 @@ block container
                 if (!post.isActive)
                   .row.justify-content-between.align-items-center
                     .col.col-auto
-                      p.text-danger(type="button" class="js-post-delete") Xóa
-                    .col.col-auto
                       button.btn.btn-warning(type="button" class="js-post-edit" ) Chỉnh sửa
+                    .col.col-auto
+                      p.text-danger(type="button" class="js-post-delete") Xóa
+                    
                 else 
                   p.text-start
                     a.btn.btn-warning(type="button" class="js-post-untrash") Phục hồi
@@ -146,10 +146,8 @@ block scripts
       .create( document.querySelector( '#editor' ) )
       .then( newEditor => {
         editor = newEditor;
-      } )
-      .catch( error => {
-          console.error( error );
-      } );
+      })
+      .catch(error => console.error(error));
 
   
       

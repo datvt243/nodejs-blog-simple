@@ -125,7 +125,7 @@ router.get('/category/:slug', async (req, res) => {
 router.get('/search', async (req, res) => {
 
   let title = req.query.title
-  let results = null
+  let results = []
   
   if (title) {
     await postModel.selectSearchByTitle(title)
@@ -148,6 +148,38 @@ router.get('/search', async (req, res) => {
       user: helpers.getSessionUser(req),
       nav: await helpersModel.getAllCategory(),
       query: title,
+      results
+    }
+  })
+  
+})
+
+router.get('/tag', async (req, res) => {
+
+  let tag = req.query.tag
+  let results = []
+  
+  if (tag) {
+    await postModel.selectSearchByTag(tag)
+      .then(data => results = data)
+      .catch(err => console.log(err))
+    results = await Promise.all(results.map( async (post) => {
+      await userModel.selectUserById(post.author)
+        .then((data) => {
+          post.author = { id: data[0].id, name: data[0].name }
+        })
+        .catch((err) => console.log(err))
+  
+      post.createdAt = helpers.formatShortDate(post.createdAt)
+      return post
+    }))
+  }
+
+  res.render('tag', {
+    data: {
+      user: helpers.getSessionUser(req),
+      nav: await helpersModel.getAllCategory(),
+      query: tag,
       results
     }
   })

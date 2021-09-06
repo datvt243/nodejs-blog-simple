@@ -1,15 +1,19 @@
 mixin card_blog(post)
   .card.card-blog(data-post= post.id)
     .card-thumb
-      img.card-img(src=path+'/images/javascript.jpg' alt= post.title)
+      .ratio.ratio-16x9
+        if (post.thumbnail)
+          img.card-img(src=path+'/images/posts/'+post.thumbnail alt= post.title)
+        else
+          img.card-img(src=path+'/images/javascript.jpg' alt= post.title)
     .card-body
       h5.card-title
-        a.card-link(href=path+'/post/'+post.slug)= post.title
+        a.card-link.trans(href=path+'/post/'+post.slug)= post.title
       p.card-text.dots= post.shotDes
     if (post.author && post.author.id && post.author.name)
       .card-footer
         p.text-right
-          a.link(href=path+'/author/'+post.author.id) @#{post.author.name}
+          a.link.card-author.trans(href=path+'/author/'+post.author.id) @#{post.author.name}
           | &nbsp;
           | -
           | &nbsp;

@@ -138,4 +138,11 @@ postModel.selectSearchByTitle = (title) => {
   return dbQuery(query, values)
 }
 
+postModel.selectSearchByTag = (tag) => {
+  let sorter = `createdAt`
+  let query = `SELECT * FROM ${tablePost} WHERE tag LIKE ? AND isActive = 0 AND isPublish = 0 ORDER BY ` + db.escapeId(sorter, true) + ` DESC`
+  let values = [`%${tag}%`]
+  return dbQuery(query, values)
+}
+
 module.exports = postModel

@@ -5,7 +5,19 @@ const categoryModel = require('../models/category')
 const userModel = require('../models/user')
 
 const helpers = require('../helpers')
-const { rawListeners } = require('../../database/database')
+
+const multer  = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/images/posts/')
+  },
+  filename: (req, file, cb) => {
+    let title = req.body.title
+    let slug = helpers.changeToSlug(title)
+    cb(null, slug + '-' + Date.now())
+  }
+})
+const upload = multer({ storage: storage })
 
 const post = {
   id: null,
@@ -69,6 +81,7 @@ router.get('/edit/:id', async (req, res) => {
       err: flagError,
       method: '',
       action: '',
+      enctype: '',
       category: await getCategory(),
       post: post,
       edit: true
@@ -198,6 +211,7 @@ router.get('/add', async (req, res) => {
       err: false,
       method: 'POST',
       action: '/admin/post/add',
+      enctype: 'multipart/form-data',
       category: await getCategory(),
       post: post,
       edit: false
@@ -205,16 +219,18 @@ router.get('/add', async (req, res) => {
   })
 })
 
-router.post('/add', (req, res) => {
+router.post('/add', upload.single('thumbnail'), (req, res) => {
   let postInput = req.body
 
   const author = req.session.User
   const newPost = {...post}
+  const thumbnail = req.file
+  // console.log({thumbnail})
 
   newPost.author      = author.id
 	newPost.title       = postInput.title
 	newPost.category    = postInput.category
-  newPost.thumbnail   = null
+  newPost.thumbnail   = thumbnail.filename
 	newPost.shotDes     = postInput.shotDes
 	newPost.content     = postInput.content
 	newPost.slug        = helpers.changeToSlug(postInput.title)
